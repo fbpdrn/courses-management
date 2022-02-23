@@ -9,26 +9,44 @@ import java.util.List;
 import static it.unibg.studenti.generated.tables.Year.YEAR;
 
 @Component
-public class YearService extends DatabaseService{
+public class YearService extends DatabaseService implements DatabaseDAO<YearRecord>{
     public YearService(DSLContext dsl) {
         super(dsl);
     }
 
+    @Override
+    public YearRecord getOne(int id) {
+        return getDSL().selectFrom(YEAR).where(YEAR.IDYEAR.eq(id)).fetchOne();
+    }
+
+    @Override
     public List<YearRecord> getAll(){
         return getDSL().selectFrom(YEAR).fetch();
     }
 
 
-    public void insert(YearRecord record) {
-        getDSL().insertInto(YEAR).set(record).execute();
+    @Override
+    public int insert(YearRecord record) {
+        return getDSL().insertInto(YEAR).set(record)
+                .returning(YEAR.IDYEAR).fetch()
+                .getValue(0, YEAR.IDYEAR);
     }
 
-    public void update(YearRecord record) {
-        getDSL().update(YEAR).set(record).where(YEAR.IDYEAR.eq(record.getIdyear())).execute();
+    @Override
+    public int update(YearRecord record) {
+        return getDSL().update(YEAR).set(record).where(YEAR.IDYEAR.eq(record.getIdyear()))
+                .returning(YEAR.IDYEAR).fetch()
+                .getValue(0, YEAR.IDYEAR);
     }
 
+    @Override
     public void delete(YearRecord record){
-        getDSL().deleteFrom(YEAR).where(YEAR.IDYEAR.eq(record.getIdyear())).execute();
+        delete(record.getIdyear());
+    }
+
+    @Override
+    public void delete(int id) {
+        getDSL().deleteFrom(YEAR).where(YEAR.IDYEAR.eq(id)).execute();
     }
 
 }

@@ -1,5 +1,12 @@
 package it.unibg.studenti.data.service;
 
-public interface DatabaseDAO {
+import java.util.List;
 
+public interface DatabaseDAO<T> {
+    T getOne(int id);
+    List<T> getAll();
+    int insert(T t);
+    int update(T t);
+    void delete(T t);
+    void delete(int id);
 }
