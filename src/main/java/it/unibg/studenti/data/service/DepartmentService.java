@@ -37,11 +37,9 @@ public class DepartmentService extends DatabaseService implements DatabaseDAO<De
     }
 
     @Override
-    public int update(DepartmentRecord departmentRecord) {
-        return getDSL().update(DEPARTMENT).set(departmentRecord)
-                .where(DEPARTMENT.IDDEPARTMENT.eq(departmentRecord.getIddepartment()))
-                .returning(DEPARTMENT.IDDEPARTMENT).fetch()
-                .getValue(0, DEPARTMENT.IDDEPARTMENT);
+    public void update(DepartmentRecord departmentRecord) {
+        getDSL().update(DEPARTMENT).set(departmentRecord)
+                .where(DEPARTMENT.IDDEPARTMENT.eq(departmentRecord.getIddepartment())).execute();
     }
 
     @Override

@@ -14,14 +14,17 @@ import it.unibg.studenti.views.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.UUID;
+
 public class UserDialog extends Dialog {
     UserRecord record;
-    private Binder<UserRecord> binder;
+    private final Binder<UserRecord> binder;
     public UserDialog(@Autowired UserService service, UserGrid userGrid, boolean isNew){
         binder = new Binder<>();
         FormLayout layout = new FormLayout();
+        TextField tfUsername = null;
         if(isNew) {
-            TextField tfUsername = new TextField("Username");
+            tfUsername = new TextField("Username");
             tfUsername.setWidthFull();
             binder.forField(tfUsername).bind(UserRecord::getUsername, UserRecord::setUsername);
             layout.add(tfUsername);
@@ -39,7 +42,7 @@ public class UserDialog extends Dialog {
         tfPassword.setWidthFull();
         tfPassword.setRequired(true);
         if(isNew)
-            tfPassword.setValue(Utility.SimpleRandomString(8));
+            tfPassword.setValue(Utility.SimpleRandomString(16));
         else
             tfPassword.setPlaceholder("Edit to change password");
 
@@ -63,9 +66,8 @@ public class UserDialog extends Dialog {
         Button btnSave = new Button("Save");
         if(!isNew) {
             btnSave.addClickListener(e -> {
-                if (!(tfPassword.getValue() == null)) {
+                if (!(tfPassword.getValue() == null))
                     binder.getBean().setHashedpassword(new BCryptPasswordEncoder().encode(tfPassword.getValue()));
-                }
                 service.update(binder.getBean());
                 userGrid.refresh();
                 this.close();
@@ -78,8 +80,15 @@ public class UserDialog extends Dialog {
             );
             actions.add(btnSave, btnAbort, btnDelete);
         } else {
+            TextField finalTfUsername = tfUsername;
             btnSave.addClickListener(e -> {
-
+                if(finalTfUsername.getValue() == null)
+                    binder.getBean().setUsername("U" + UUID.randomUUID());
+                BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+                binder.getBean().setHashedpassword(bcrypt.encode(tfPassword.getValue()));
+                service.insert(binder.getBean());
+                userGrid.refresh();
+                this.close();
             });
             actions.add(btnSave, btnAbort);
         }

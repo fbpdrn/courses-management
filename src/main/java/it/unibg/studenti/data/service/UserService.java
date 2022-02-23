@@ -36,10 +36,8 @@ public class UserService extends DatabaseService implements DatabaseDAO<UserReco
     }
 
     @Override
-    public int update(UserRecord record) {
-        return getDSL().update(USER).set(record).where(USER.IDUSER.eq(record.getIduser()))
-                .returning(USER.IDUSER).fetch()
-                .getValue(0, USER.IDUSER);
+    public void update(UserRecord record) {
+        getDSL().update(USER).set(record).where(USER.IDUSER.eq(record.getIduser())).execute();
     }
 
     @Override

@@ -33,10 +33,8 @@ public class YearService extends DatabaseService implements DatabaseDAO<YearReco
     }
 
     @Override
-    public int update(YearRecord record) {
-        return getDSL().update(YEAR).set(record).where(YEAR.IDYEAR.eq(record.getIdyear()))
-                .returning(YEAR.IDYEAR).fetch()
-                .getValue(0, YEAR.IDYEAR);
+    public void update(YearRecord record) {
+        getDSL().update(YEAR).set(record).where(YEAR.IDYEAR.eq(record.getIdyear())).execute();
     }
 
     @Override
