@@ -5,17 +5,12 @@ import com.vaadin.flow.component.html.Span;
 import it.unibg.studenti.data.service.UserService;
 import it.unibg.studenti.generated.tables.records.UserRecord;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserGrid extends Grid<UserRecord> {
     private UserDialog dialog;
-    private UserService userService;
-
-    @Autowired
-    ResourceBundleWrapper resourceBundle;
+    private final UserService userService;
 
     public UserGrid(UserService service, ResourceBundleWrapper resourceBundle){
-        this.resourceBundle = resourceBundle;
         this.userService = service;
         dialog = new UserDialog(userService, this, false, resourceBundle);
         addColumn(UserRecord::getUsername)
@@ -28,9 +23,8 @@ public class UserGrid extends Grid<UserRecord> {
                 .setHeader(resourceBundle.getString("component_settings_users_password"));
         addColumn(UserRecord::getRole)
                 .setHeader(resourceBundle.getString("component_settings_users_role"));
-        addItemClickListener(e -> {
-           dialog.openAndSetBinder(e.getItem());
-        });
+        addItemClickListener(e -> dialog.openAndSetBinder(e.getItem()));
+        setItems(service.getAll());
     }
 
     public UserDialog getDialog() {

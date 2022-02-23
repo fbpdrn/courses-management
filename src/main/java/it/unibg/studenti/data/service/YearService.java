@@ -2,6 +2,7 @@ package it.unibg.studenti.data.service;
 
 import it.unibg.studenti.generated.tables.records.YearRecord;
 import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import static it.unibg.studenti.generated.tables.Year.YEAR;
 
 @Component
 public class YearService extends DatabaseService implements DatabaseDAO<YearRecord>{
-    public YearService(DSLContext dsl) {
+    public YearService(@Autowired DSLContext dsl) {
         super(dsl);
     }
 

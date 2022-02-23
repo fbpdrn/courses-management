@@ -2,15 +2,18 @@ package it.unibg.studenti.data.service;
 
 import it.unibg.studenti.generated.tables.records.DepartmentRecord;
 import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static it.unibg.studenti.generated.tables.Department.DEPARTMENT;
 
+@Component
 public class DepartmentService extends DatabaseService implements DatabaseDAO<DepartmentRecord>{
 
-    public DepartmentService(DSLContext dsl) {
+    public DepartmentService(@Autowired DSLContext dsl) {
         super(dsl);
     }
 
@@ -21,9 +24,7 @@ public class DepartmentService extends DatabaseService implements DatabaseDAO<De
     }
 
     @Override
-    public List<DepartmentRecord> getAll() {
-        return null;
-    }
+    public List<DepartmentRecord> getAll() { return getDSL().selectFrom(DEPARTMENT).fetchInto(DepartmentRecord.class); }
 
     @Override
     public int insert(DepartmentRecord departmentRecord) {
