@@ -8,6 +8,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import it.unibg.studenti.data.service.YearService;
 import it.unibg.studenti.generated.tables.records.YearRecord;
+import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class YearDialog extends Dialog {
@@ -15,13 +16,15 @@ public class YearDialog extends Dialog {
     private Binder<YearRecord> binder;
     private DatePicker dtStart;
     private DatePicker dtEnd;
+    private ResourceBundleWrapper resourceBundle;
 
-    public YearDialog(@Autowired YearService service, YearGrid yearGrid, boolean isNew){
+    public YearDialog(@Autowired YearService service, YearGrid yearGrid, boolean isNew, ResourceBundleWrapper resourceBundle){
+        this.resourceBundle = resourceBundle;
         binder = new Binder<>();
         FormLayout layout = new FormLayout();
 
-        dtStart = new DatePicker("Year Start Date");
-        dtEnd = new DatePicker("Year Start Date");
+        dtStart = new DatePicker(resourceBundle.getString("component_settings_misc_yearsd"));
+        dtEnd = new DatePicker(resourceBundle.getString("component_settings_misc_yeared"));
         dtStart.addValueChangeListener(e -> {
             dtEnd.setMin(e.getValue());
             binder.getBean().setYearstart(String.valueOf(dtStart.getValue()));
@@ -35,9 +38,9 @@ public class YearDialog extends Dialog {
 
         HorizontalLayout actions = new HorizontalLayout();
 
-        Button btnAbort = new Button("Abort");
+        Button btnAbort = new Button(resourceBundle.getString("component_common_button_abort"));
         btnAbort.addClickListener(e -> this.close());
-        Button btnSave = new Button("Save");
+        Button btnSave = new Button(resourceBundle.getString("component_common_button_save"));
         btnSave.addClickListener(e -> {
             binder.getBean().setYearstart(String.valueOf(dtStart.getValue()));
             binder.getBean().setYearend(String.valueOf(dtEnd.getValue()));
@@ -49,7 +52,7 @@ public class YearDialog extends Dialog {
             this.close();
         });
         if(!isNew) {
-            Button btnDelete = new Button("Delete");
+            Button btnDelete = new Button(resourceBundle.getString("component_common_button_delete"));
             btnDelete.addClickListener(e -> {
                 service.delete(binder.getBean());
                 yearGrid.refresh();

@@ -4,24 +4,30 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import it.unibg.studenti.data.service.UserService;
 import it.unibg.studenti.generated.tables.records.UserRecord;
+import it.unibg.studenti.views.utils.ResourceBundleWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserGrid extends Grid<UserRecord> {
     private UserDialog dialog;
     private UserService userService;
 
-    public UserGrid(UserService service){
+    @Autowired
+    ResourceBundleWrapper resourceBundle;
+
+    public UserGrid(UserService service, ResourceBundleWrapper resourceBundle){
+        this.resourceBundle = resourceBundle;
         this.userService = service;
-        dialog = new UserDialog(userService, this, false);
+        dialog = new UserDialog(userService, this, false, resourceBundle);
         addColumn(UserRecord::getUsername)
-                .setHeader("Username");
+                .setHeader(resourceBundle.getString("component_settings_users_username"));
         addColumn(UserRecord::getName)
-                .setHeader("Name");
+                .setHeader(resourceBundle.getString("component_settings_users_name"));
         addColumn(UserRecord::getSurname)
-                .setHeader("Surname");
+                .setHeader(resourceBundle.getString("component_settings_users_surname"));
         addComponentColumn( e -> new Span("******"))
-                .setHeader("Password");
+                .setHeader(resourceBundle.getString("component_settings_users_password"));
         addColumn(UserRecord::getRole)
-                .setHeader("Role");
+                .setHeader(resourceBundle.getString("component_settings_users_role"));
         addItemClickListener(e -> {
            dialog.openAndSetBinder(e.getItem());
         });

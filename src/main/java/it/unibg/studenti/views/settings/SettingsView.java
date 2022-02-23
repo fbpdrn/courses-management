@@ -15,6 +15,7 @@ import it.unibg.studenti.data.service.YearService;
 import it.unibg.studenti.generated.tables.records.UserRecord;
 import it.unibg.studenti.generated.tables.records.YearRecord;
 import it.unibg.studenti.views.MainLayout;
+import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
@@ -25,7 +26,7 @@ import javax.annotation.security.RolesAllowed;
 public class SettingsView extends HorizontalLayout {
     private final Tab appSettings;
     private final Tab userSettings;
-    private VerticalLayout content;
+    private final VerticalLayout content;
     private UserGrid userGrid;
     private YearGrid yearGrid;
     @Autowired
@@ -34,14 +35,15 @@ public class SettingsView extends HorizontalLayout {
     @Autowired
     private YearService yearService;
 
-    public SettingsView() {
-        this.userService = userService;
-        this.yearService = yearService;
+    private final ResourceBundleWrapper resourceBundle;
+
+    public SettingsView(@Autowired ResourceBundleWrapper resourceBundle) {
+        this.resourceBundle = resourceBundle;
         setSpacing(false);
         setSizeFull();
 
-        appSettings = new Tab(VaadinIcon.COG.create(),new Span("Miscellaneous"));
-        userSettings = new Tab(VaadinIcon.USER.create(),new Span("Users"));
+        appSettings = new Tab(VaadinIcon.COG.create(),new Span(resourceBundle.getString("settings_menu_misc")));
+        userSettings = new Tab(VaadinIcon.USER.create(),new Span(resourceBundle.getString("settings_menu_users")));
         Tabs tabs = new Tabs(
                 appSettings,userSettings
         );
@@ -50,10 +52,9 @@ public class SettingsView extends HorizontalLayout {
         tabs.addSelectedChangeListener(event ->
                 setContent(event.getSelectedTab())
         );
-        tabs.setSelectedTab(appSettings);
         add(tabs);
         content = new VerticalLayout();
-        content.add(new Paragraph("Please select an option on the left navbar."));
+        content.add(new Paragraph(resourceBundle.getString("settings_welcome")));
         add(content);
     }
 
@@ -69,11 +70,11 @@ public class SettingsView extends HorizontalLayout {
 
     private VerticalLayout createAppSettingsContent(){
         VerticalLayout layout = new VerticalLayout();
-        yearGrid = new YearGrid(yearService);
+        yearGrid = new YearGrid(yearService, resourceBundle);
         yearGrid.setItems(yearService.getAll());
-        Button btNewYear = new Button("+");
+        Button btNewYear = new Button(resourceBundle.getString("component_common_button_new"));
         btNewYear.addClickListener(e -> {
-            YearDialog yearDialog = new YearDialog(yearService,yearGrid, true);
+            YearDialog yearDialog = new YearDialog(yearService,yearGrid, true, resourceBundle);
             yearDialog.openAndSetBinder(new YearRecord());
         });
         layout.add(btNewYear,yearGrid);
@@ -82,11 +83,11 @@ public class SettingsView extends HorizontalLayout {
 
     private VerticalLayout createUserSettingsContent(){
         VerticalLayout layout = new VerticalLayout();
-        userGrid = new UserGrid(userService);
+        userGrid = new UserGrid(userService, resourceBundle);
         userGrid.setItems(userService.getAll());
-        Button btNewUser = new Button("+");
+        Button btNewUser = new Button(resourceBundle.getString("component_common_button_new"));
         btNewUser.addClickListener(e -> {
-            UserDialog userDialog = new UserDialog(userService,userGrid,true);
+            UserDialog userDialog = new UserDialog(userService,userGrid,true, resourceBundle);
             userDialog.openAndSetBinder(new UserRecord());
         });
         layout.add(btNewUser,userGrid);

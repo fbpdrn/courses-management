@@ -1,25 +1,18 @@
 package it.unibg.studenti.views;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.NpmPackage;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Nav;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.html.UnorderedList;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
-import it.unibg.studenti.data.entity.User;
 import it.unibg.studenti.generated.tables.records.UserRecord;
 import it.unibg.studenti.security.AuthenticatedUser;
 import it.unibg.studenti.views.about.AboutView;
@@ -30,6 +23,10 @@ import it.unibg.studenti.views.planner.PlannerView;
 import it.unibg.studenti.views.settings.SettingsView;
 import it.unibg.studenti.views.staff.StaffView;
 import it.unibg.studenti.views.studyplan.StudyPlanView;
+import it.unibg.studenti.views.utils.ResourceBundleWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -84,10 +81,12 @@ public class MainLayout extends AppLayout {
 
     private AuthenticatedUser authenticatedUser;
     private AccessAnnotationChecker accessChecker;
+    private ResourceBundleWrapper resourceBundle;
 
-    public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+    public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker, @Autowired ResourceBundleWrapper resourceBundleWrapper) {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
+        this.resourceBundle = resourceBundleWrapper;
 
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
@@ -102,19 +101,22 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H1();
         viewTitle.addClassNames("m-0", "text-l");
-
-        Header header = new Header(toggle, viewTitle);
+        Component langSwitch = MenuLangSwitch(VaadinSession.getCurrent().getLocale(), resourceBundle);
+        langSwitch.getElement().getStyle()
+                .set("float", "right")
+                .set("margin-right", "10px")
+                .set("margin-left","auto");
+        Header header = new Header(toggle, viewTitle, langSwitch);
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
                 "w-full");
         return header;
     }
 
     private Component createDrawerContent() {
-        H2 appName = new H2("Course Management");
+        H2 appName = new H2(resourceBundle.getString("app_name"));
         appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
-
-        com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName,
-                createNavigation(), createFooter());
+        com.vaadin.flow.component.html.Section section =
+                new com.vaadin.flow.component.html.Section(appName, createNavigation(), createFooter());
         section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
         return section;
     }
@@ -140,21 +142,21 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Home", "la la-home", HomeView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_home"), "la la-home", HomeView.class), //
 
-                new MenuItemInfo("Study Plan", "la la-table", StudyPlanView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_studyplan"), "la la-table", StudyPlanView.class), //
 
-                new MenuItemInfo("Planner", "la la-book-open", PlannerView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_planner"), "la la-book-open", PlannerView.class), //
 
-                new MenuItemInfo("Courses", "la la-book", CoursesView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_courses"), "la la-book", CoursesView.class), //
 
-                new MenuItemInfo("Staff", "la la-user-circle", StaffView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_staff"), "la la-user-circle", StaffView.class), //
 
-                new MenuItemInfo("Departments", "la la-building", DepartmentsView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_departments"), "la la-building", DepartmentsView.class), //
 
-                new MenuItemInfo("Settings", "la la-wrench", SettingsView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_settings"), "la la-wrench", SettingsView.class), //
 
-                new MenuItemInfo("About", "la la-info-circle", AboutView.class), //
+                new MenuItemInfo(resourceBundle.getString("app_about"), "la la-info-circle", AboutView.class), //
 
         };
     }
@@ -162,7 +164,6 @@ public class MainLayout extends AppLayout {
     private Footer createFooter() {
         Footer layout = new Footer();
         layout.addClassNames("flex", "items-center", "my-s", "px-m", "py-xs");
-
         Optional<UserRecord> maybeUser = authenticatedUser.get();
         if (maybeUser.isPresent()) {
             UserRecord user = maybeUser.get();
@@ -172,20 +173,40 @@ public class MainLayout extends AppLayout {
 
             ContextMenu userMenu = new ContextMenu(avatar);
             userMenu.setOpenOnClick(true);
-            userMenu.addItem("Logout", e -> {
-                authenticatedUser.logout();
-            });
+            userMenu.addItem(resourceBundle.getString("component_login_disconnect"), e -> authenticatedUser.logout());
 
             Span name = new Span(user.getName() + " " + user.getSurname());
             name.addClassNames("font-medium", "text-s", "text-secondary");
 
             layout.add(avatar, name);
         } else {
-            Anchor loginLink = new Anchor("login", "Sign in");
+            Anchor loginLink = new Anchor("login", resourceBundle.getString("component_login_signin"));
             layout.add(loginLink);
         }
 
         return layout;
+    }
+
+    private static Component MenuLangSwitch(Locale locale, ResourceBundleWrapper resourceBundleWrapper){
+        Image langImage;
+        if(locale.equals(Locale.ITALY))
+            langImage = new Image("images/countries/united-kingdom.png", "English (GB)");
+        else
+            langImage = new Image("images/countries/italy.png", "Italian (IT)");
+        langImage.setWidth("24px");
+        langImage.addClickListener(e -> {
+            if(locale.equals(Locale.ITALY)) {
+                VaadinSession.getCurrent().setLocale(Locale.UK);
+                resourceBundleWrapper.setLocale(Locale.UK);
+            }
+            else {
+                VaadinSession.getCurrent().setLocale(Locale.ITALY);
+                resourceBundleWrapper.setLocale(Locale.ITALY);
+            }
+            UI.getCurrent().getPage().reload();
+        });
+        langImage.getElement().getStyle().set("float", "right");
+        return langImage;
     }
 
     @Override

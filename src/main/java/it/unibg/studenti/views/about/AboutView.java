@@ -8,21 +8,23 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import it.unibg.studenti.views.MainLayout;
+import it.unibg.studenti.views.utils.ResourceBundleWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("About")
 @Route(value = "about", layout = MainLayout.class)
 @AnonymousAllowed
 public class AboutView extends VerticalLayout {
-    public AboutView() {
+    public AboutView(@Autowired ResourceBundleWrapper resourceBundle) {
         setSpacing(false);
 
         Image img = new Image("images/logo.png", "Logo");
         img.setWidth("200px");
         add(img);
 
-        add(new H2("Course Management"));
-        add(new Paragraph("Matricola: 1042015"));
-        add(new Paragraph("e-mail: f.pedrini1@studenti.unibg.it"));
+        add(new H2(resourceBundle.getString("app_name")));
+        add(new Paragraph(resourceBundle.getString("about_studentid")));
+        add(new Paragraph(resourceBundle.getString("about_email")));
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
