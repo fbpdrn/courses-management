@@ -20,7 +20,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import it.unibg.studenti.data.entity.User;
+import it.unibg.studenti.generated.tables.records.UserRecord;
 import it.unibg.studenti.security.AuthenticatedUser;
+import it.unibg.studenti.views.about.AboutView;
 import it.unibg.studenti.views.courses.CoursesView;
 import it.unibg.studenti.views.departments.DepartmentsView;
 import it.unibg.studenti.views.home.HomeView;
@@ -152,6 +154,8 @@ public class MainLayout extends AppLayout {
 
                 new MenuItemInfo("Settings", "la la-wrench", SettingsView.class), //
 
+                new MenuItemInfo("About", "la la-info-circle", AboutView.class), //
+
         };
     }
 
@@ -159,11 +163,11 @@ public class MainLayout extends AppLayout {
         Footer layout = new Footer();
         layout.addClassNames("flex", "items-center", "my-s", "px-m", "py-xs");
 
-        Optional<User> maybeUser = authenticatedUser.get();
+        Optional<UserRecord> maybeUser = authenticatedUser.get();
         if (maybeUser.isPresent()) {
-            User user = maybeUser.get();
+            UserRecord user = maybeUser.get();
 
-            Avatar avatar = new Avatar(user.getName(), user.getProfilePictureUrl());
+            Avatar avatar = new Avatar(user.getName() + " " + user.getSurname(), user.getProfilepictureurl());
             avatar.addClassNames("me-xs");
 
             ContextMenu userMenu = new ContextMenu(avatar);
@@ -172,7 +176,7 @@ public class MainLayout extends AppLayout {
                 authenticatedUser.logout();
             });
 
-            Span name = new Span(user.getName());
+            Span name = new Span(user.getName() + " " + user.getSurname());
             name.addClassNames("font-medium", "text-s", "text-secondary");
 
             layout.add(avatar, name);

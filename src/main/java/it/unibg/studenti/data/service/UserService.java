@@ -1,40 +1,37 @@
 package it.unibg.studenti.data.service;
 
-import it.unibg.studenti.data.entity.User;
-import java.util.Optional;
-import java.util.UUID;
+import it.unibg.studenti.generated.tables.records.UserRecord;
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class UserService {
+import java.util.List;
 
-    private UserRepository repository;
+import static it.unibg.studenti.generated.tables.User.USER;
 
-    public UserService(@Autowired UserRepository repository) {
-        this.repository = repository;
+@Component
+public class UserService extends DatabaseService{
+    public UserService(@Autowired DSLContext dsl) {
+        super(dsl);
     }
 
-    public Optional<User> get(UUID id) {
-        return repository.findById(id);
+    public UserRecord findByUsername(String username){
+        return getDSL().selectFrom(USER).where(USER.USERNAME.eq(username)).fetchOne();
     }
 
-    public User update(User entity) {
-        return repository.save(entity);
+    public List<UserRecord> getAll() {
+        return getDSL().selectFrom(USER).fetch();
     }
 
-    public void delete(UUID id) {
-        repository.deleteById(id);
+    public void insert(UserRecord record) {
+        getDSL().insertInto(USER).set(record).execute();
     }
 
-    public Page<User> list(Pageable pageable) {
-        return repository.findAll(pageable);
+    public void update(UserRecord record) {
+        getDSL().update(USER).set(record).where(USER.IDUSER.eq(record.getIduser())).execute();
     }
 
-    public int count() {
-        return (int) repository.count();
+    public void delete(UserRecord record) {
+        getDSL().deleteFrom(USER).where(USER.IDUSER.eq(record.getIduser())).execute();
     }
-
 }

@@ -2,9 +2,11 @@ package it.unibg.studenti.security;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinServletRequest;
-import it.unibg.studenti.data.entity.User;
-import it.unibg.studenti.data.service.UserRepository;
+import it.unibg.studenti.data.service.UserService;
+
 import java.util.Optional;
+
+import it.unibg.studenti.generated.tables.records.UserRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class AuthenticatedUser {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     private Optional<Authentication> getAuthentication() {
         SecurityContext context = SecurityContextHolder.getContext();
@@ -25,8 +27,8 @@ public class AuthenticatedUser {
                 .filter(authentication -> !(authentication instanceof AnonymousAuthenticationToken));
     }
 
-    public Optional<User> get() {
-        return getAuthentication().map(authentication -> userRepository.findByUsername(authentication.getName()));
+    public Optional<UserRecord> get() {
+        return getAuthentication().map(authentication -> userService.findByUsername(authentication.getName()));
     }
 
     public void logout() {

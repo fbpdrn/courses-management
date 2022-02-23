@@ -3,11 +3,16 @@ package it.unibg.studenti.data.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.unibg.studenti.data.AbstractEntity;
 import it.unibg.studenti.data.Role;
+import it.unibg.studenti.generated.tables.records.UserRecord;
+
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User extends AbstractEntity {
@@ -51,5 +56,14 @@ public class User extends AbstractEntity {
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
     }
-
+    public void setUserWithRecord(@NotNull UserRecord record) {
+        this.setUsername(record.getUsername());
+        this.setHashedPassword(record.getHashedpassword());
+        this.setProfilePictureUrl(record.getProfilepictureurl());
+        if(record.getRole().equals(Role.ADMIN.getRoleName())){
+            this.setRoles(Stream.of(Role.USER, Role.ADMIN).collect(Collectors.toSet()));
+        } else if(record.getRole().equals(Role.USER.getRoleName())) {
+            this.setRoles(Stream.of(Role.USER).collect(Collectors.toSet()));
+        }
+    }
 }

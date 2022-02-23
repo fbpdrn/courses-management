@@ -12,6 +12,17 @@
     <properties>
         <java.version>17</java.version>
         <vaadin.version>22.0.5</vaadin.version>
+        <jooq.version>3.16.3</jooq.version>
+        <mysql.connector.version>8.0.25</mysql.connector.version>
+        <database.nativeDriver>com.mysql.cj.jdbc.Driver</database.nativeDriver>
+        <database.jooqDriver>org.jooq.meta.mysql.MySQLDatabase</database.jooqDriver>
+        <database.schema>course_management</database.schema>
+        <database.port>3306</database.port>
+        <database.username>cm_user</database.username>
+        <database.password>cm_pass</database.password>
+        <database.url>
+            jdbc:mysql://localhost:${database.port}/${database.schema}
+        </database.url>
     </properties>
 
     <parent>
@@ -144,6 +155,28 @@
             <version>4.4.0</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -152,19 +185,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- Clean build and startup time for Vaadin apps sometimes may exceed
-                     the default Spring Boot's 30sec timeout.  -->
                 <configuration>
                     <wait>500</wait>
                     <maxAttempts>240</maxAttempts>
                 </configuration>
             </plugin>
-
-            <!--
-                Take care of synchronizing java dependencies and imports in
-                package.json and main.js files.
-                It also creates webpack.config.js if not exists yet.
-            -->
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
@@ -174,6 +199,40 @@
                         <goals>
                             <goal>prepare-frontend</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.16.3</version>
+                <executions>
+                    <execution>
+                        <id>generate-mysql</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <jdbc>
+                                <driver>${database.nativeDriver}</driver>
+                                <url>${database.url}</url>
+                                <user>${database.username}</user>
+                                <password>${database.password}</password>
+                            </jdbc>
+                            <generator>
+                                <database>
+                                    <name>${database.jooqDriver}</name>
+                                    <includes>.*</includes>
+                                    <excludes/>
+                                    <inputSchema>${database.schema}</inputSchema>
+                                </database>
+                                <target>
+                                    <packageName>it.unibg.studenti.generated</packageName>
+                                    <directory>target/generated-sources/jooq</directory>
+                                </target>
+                            </generator>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
