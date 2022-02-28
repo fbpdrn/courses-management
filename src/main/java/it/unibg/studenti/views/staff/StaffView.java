@@ -7,6 +7,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import it.unibg.studenti.data.service.ServiceManager;
 import it.unibg.studenti.data.service.StaffService;
 import it.unibg.studenti.data.service.UserService;
 import it.unibg.studenti.generated.tables.records.StaffRecord;
@@ -25,13 +26,12 @@ public class StaffView extends VerticalLayout {
 
     private StaffService service;
     private final StaffGrid grid;
-    private UserService userService;
     private final UserRecord currentRecordUser;
 
-    public StaffView(@Autowired StaffService service, @Autowired ResourceBundleWrapper resourceBundle, @Autowired AuthenticatedUser currentUser, @Autowired UserService userService) {
+    public StaffView(@Autowired ServiceManager service, @Autowired ResourceBundleWrapper resourceBundle, @Autowired AuthenticatedUser currentUser) {
         setSpacing(false);
         setSizeFull();
-        currentRecordUser = getCurrentUser(userService, currentUser);
+        currentRecordUser = getCurrentUser(service.getUserService(), currentUser);
         grid = new StaffGrid(service, resourceBundle, currentRecordUser);
         Button btnNew = new Button(resourceBundle.getString("component_common_button_new"));
         btnNew.addClickListener(e -> {

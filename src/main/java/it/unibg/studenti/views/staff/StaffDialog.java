@@ -9,8 +9,10 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
+import it.unibg.studenti.data.Contract;
 import it.unibg.studenti.data.Sex;
-import it.unibg.studenti.data.service.StaffService;
+import it.unibg.studenti.data.service.ServiceManager;
+import it.unibg.studenti.generated.tables.records.DepartmentRecord;
 import it.unibg.studenti.generated.tables.records.StaffRecord;
 import it.unibg.studenti.generated.tables.records.UserRecord;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
@@ -22,20 +24,20 @@ import java.util.UUID;
 
 public class StaffDialog extends Dialog {
     private CollaborationBinder<StaffRecord> binder;
-    private StaffService service;
+    private ServiceManager service;
     private UserInfo currentUserInfo;
     private UserRecord currentUser;
     private StaffRecord currentRecord;
 
-    public StaffDialog(@Autowired StaffService service, StaffGrid staffGrid,
+    public StaffDialog(@Autowired ServiceManager service, StaffGrid staffGrid,
                        StaffRecord record, ResourceBundleWrapper resourceBundle, UserRecord currentUser){
+        this.service = service;
         this.currentUser = currentUser;
         this.currentUserInfo = getCurrentUserInfo();
         this.currentRecord = record;
         this.binder = new CollaborationBinder<>(
                 StaffRecord.class, currentUserInfo);
         FormLayout layout = new FormLayout();
-
         CollaborationAvatarGroup avatarGroup = new CollaborationAvatarGroup(
                 currentUserInfo, "staff/" + (record.getIdstaff() < 0 ? UUID.randomUUID() : record.getIdstaff()));
         layout.add(avatarGroup);
@@ -58,12 +60,30 @@ public class StaffDialog extends Dialog {
         tfSurname.setLabel(resourceBundle.getString("component_staff_surname"));
 
         Select<String> tfSex = new Select<>();
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> slist = new ArrayList<>();
         for(Sex s : Sex.values()) {
-            list.add(s.getSexName());
+            slist.add(s.getSexName());
         }
-        tfSex.setItems(list);
+        tfSex.setItems(slist);
         tfSex.setLabel(resourceBundle.getString("component_staff_sex"));
+
+        Select<String> tfContract = new Select<>();
+        ArrayList<String> clist = new ArrayList<>();
+        for(Contract s : Contract.values()) {
+            clist.add(s.getTypeName());
+        }
+        tfContract.setItems(clist);
+        tfContract.setLabel(resourceBundle.getString("component_staff_contract"));
+
+        Select<Integer> tfDepartment = new Select<>();
+        ArrayList<DepartmentRecord> dep = new ArrayList<>(service.getDepartmentService().getAll());
+        ArrayList<Integer> l = new ArrayList<>();
+        for(DepartmentRecord d : dep){
+            l.add(d.getIddepartment());
+        }
+        tfDepartment.setItems(l);
+        tfDepartment.setItemLabelGenerator(item -> service.getDepartmentService().getOne(item).getName());
+        tfDepartment.setLabel(resourceBundle.getString("component_staff_department"));
 
         TextField tfPhone = new TextField();
         tfPhone.setLabel(resourceBundle.getString("component_staff_phone"));
@@ -96,9 +116,11 @@ public class StaffDialog extends Dialog {
         binder.forField(tfStreetNumber).bind("streetnumber");
         binder.forField(tfCity).bind("city");
         binder.forField(tfZipcode).bind("zipcode");
-        binder.setTopic("staff/" + (record.getIdstaff() < 0 ? UUID.randomUUID() : record.getIdstaff()), () -> service.getOne(record.getIdstaff()));
+        binder.forField(tfContract).bind("contract");
+        binder.forField(tfDepartment).bind("departmentid");
+        binder.setTopic("staff/" + (record.getIdstaff() < 0 ? UUID.randomUUID() : record.getIdstaff()), () -> service.getStaffService().getOne(record.getIdstaff()));
         layout.add(tfEmail, tfFirstname, tfMiddlename, tfSurname, tfSex, tfPhone, tfRoom, tfStreet, tfStreetNumber,
-                tfCity, tfZipcode);
+                tfCity, tfZipcode, tfContract, tfDepartment);
 
         binder.setExpirationTimeout(Duration.ofMinutes(10));
         HorizontalLayout actions = new HorizontalLayout();
@@ -106,9 +128,9 @@ public class StaffDialog extends Dialog {
         btnSave.addClickListener(e -> {
             if (binder.isValid()) {
                 if (record.getIdstaff() < 0)
-                    service.insert(bindToRecord(binder));
+                    service.getStaffService().insert(bindToRecord(binder));
                 else {
-                    service.update(bindToRecord(binder));
+                    service.getStaffService().update(bindToRecord(binder));
                 }
                 staffGrid.refresh();
                 this.close();
@@ -118,7 +140,7 @@ public class StaffDialog extends Dialog {
         btnAbort.addClickListener(e -> this.close());
         Button btnDelete = new Button(resourceBundle.getString("component_common_button_delete"));
         btnDelete.addClickListener(e -> {
-            service.delete(bindToRecord(binder));
+            service.getStaffService().delete(bindToRecord(binder));
             staffGrid.refresh();
             this.close();
         });
@@ -150,6 +172,10 @@ public class StaffDialog extends Dialog {
         currentRecord.setStreetnumber(String.valueOf(binder.getBinding("streetnumber").get().getField().getValue()));
         currentRecord.setCity(String.valueOf(binder.getBinding("city").get().getField().getValue()));
         currentRecord.setZipcode(String.valueOf(binder.getBinding("zipcode").get().getField().getValue()));
+        currentRecord.setContract(String.valueOf(binder.getBinding("contract").get().getField().getValue()));
+
+        DepartmentRecord record = service.getDepartmentService().getOne((int) binder.getBinding("departmentid").get().getField().getValue());
+        currentRecord.setDepartmentid(record.getIddepartment());
         return currentRecord;
     }
 }
