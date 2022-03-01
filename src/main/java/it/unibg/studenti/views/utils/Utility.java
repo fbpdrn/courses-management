@@ -12,4 +12,16 @@ public class Utility {
         }
         return rnd.toString();
     }
+
+    public static Double convertToDouble(Object o) {
+        if(o == null)
+            return null;
+        return Double.parseDouble(o.toString());
+    }
+
+    public static String convertToString(Object o) {
+        if(o == null)
+            return null;
+        return String.valueOf(o);
+    }
 }

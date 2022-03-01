@@ -1,20 +1,43 @@
 package it.unibg.studenti.views.courses;
 
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.collaborationengine.UserInfo;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import it.unibg.studenti.data.service.ServiceManager;
+import it.unibg.studenti.security.AuthenticatedUser;
+import it.unibg.studenti.views.AbstractView;
 import it.unibg.studenti.views.MainLayout;
+import it.unibg.studenti.views.utils.ResourceBundleWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
 
 @PageTitle("Courses")
 @Route(value = "courses", layout = MainLayout.class)
 @RolesAllowed("user")
-public class CoursesView extends VerticalLayout {
+public class CoursesView extends AbstractView {
 
-    public CoursesView() {
-        add(new Paragraph("Not Implemented"));
+    public CoursesView(@Autowired ServiceManager service, @Autowired ResourceBundleWrapper resourceBundle, @Autowired AuthenticatedUser currentUser) {
+        UserInfo userInfo = getUserInfo(service, currentUser);
+        setSpacing(false);
+        setSizeFull();
+
+        CoursesGrid grid = new CoursesGrid(service,
+                resourceBundle,
+                userInfo);
+
+        HorizontalLayout topLayout = new HorizontalLayout();
+        Button btnNew = new Button(resourceBundle.getString("component_common_button_new"));
+        btnNew.addClickListener(e -> new CoursesDialog(service, resourceBundle, grid, null, userInfo).open());
+        TextField searchBar = new TextField();
+        searchBar.setPlaceholder("CERCA PER NOME, ID, ECC");
+        searchBar.addValueChangeListener(e -> service.getCourseService().getFiltered(e.getValue()));
+        topLayout.add(btnNew);
+        topLayout.addAndExpand(searchBar);
+
+        add(topLayout, grid);
     }
-
 }

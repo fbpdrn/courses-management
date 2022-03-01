@@ -9,12 +9,15 @@ public class ServiceManager extends DatabaseService{
     private DepartmentService departmentService;
     private StaffService staffService;
     private UserService userService;
+    private CourseService courseService;
 
-    public ServiceManager(@Autowired DSLContext dsl) {
+    public ServiceManager(@Autowired DSLContext dsl, @Autowired DepartmentService departmentService, @Autowired StaffService staffService, @Autowired UserService userService,
+                          @Autowired CourseService courseService) {
         super(dsl);
-        departmentService = new DepartmentService(dsl);
-        staffService = new StaffService(dsl);
-        userService = new UserService(dsl);
+        this.departmentService = departmentService;
+        this.staffService = staffService;
+        this.userService = userService;
+        this.courseService = courseService;
     }
 
     public DepartmentService getDepartmentService() {
@@ -39,5 +42,13 @@ public class ServiceManager extends DatabaseService{
 
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    public CourseService getCourseService() {
+        return courseService;
+    }
+
+    public void setCourseService(CourseService courseService) {
+        this.courseService = courseService;
     }
 }
