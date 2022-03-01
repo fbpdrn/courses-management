@@ -1,6 +1,8 @@
 package it.unibg.studenti.data.service;
 
 import it.unibg.studenti.generated.tables.records.CourseRecord;
+import it.unibg.studenti.generated.tables.records.ReferentRecord;
+import it.unibg.studenti.generated.tables.records.StaffRecord;
 import org.jooq.DSLContext;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -8,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static it.unibg.studenti.generated.tables.Course.COURSE;
+import static it.unibg.studenti.generated.tables.Referent.REFERENT;
+import static it.unibg.studenti.generated.tables.Staff.STAFF;
 
 @Component
 public class CourseService extends DatabaseService implements DatabaseDAO<CourseRecord>{
@@ -61,6 +65,18 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
         return getDSL().selectFrom(COURSE).where(COURSE.NAME
                         .likeIgnoreCase("%" + str +"%"))
                 .or(COURSE.CODE.likeIgnoreCase("%" + str +"%"))
+                .fetchInto(CourseRecord.class);
+    }
+
+    public List<CourseRecord> getCoursesByStaff(StaffRecord staffRecord) {
+        return getCoursesByStaff(staffRecord.getIdstaff());
+    }
+
+    public List<CourseRecord> getCoursesByStaff(int id) {
+        return getDSL().select().from(COURSE)
+                .join(REFERENT).on(REFERENT.COURSE_IDCOURSE.eq(COURSE.IDCOURSE))
+                .join(STAFF).on(REFERENT.STAFF_IDSTAFF.eq(STAFF.IDSTAFF))
+                .where(STAFF.IDSTAFF.eq(id))
                 .fetchInto(CourseRecord.class);
     }
 }

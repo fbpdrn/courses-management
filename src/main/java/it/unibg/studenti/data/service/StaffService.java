@@ -1,5 +1,6 @@
 package it.unibg.studenti.data.service;
 
+import it.unibg.studenti.generated.tables.records.CourseRecord;
 import it.unibg.studenti.generated.tables.records.StaffRecord;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static it.unibg.studenti.generated.tables.Course.COURSE;
+import static it.unibg.studenti.generated.tables.Referent.REFERENT;
 import static it.unibg.studenti.generated.tables.Staff.STAFF;
 
 @Component
@@ -61,6 +64,18 @@ public class StaffService extends DatabaseService implements DatabaseDAO<StaffRe
                 .or(STAFF.MIDDLENAME.likeIgnoreCase("%" + str +"%"))
                 .or(STAFF.FIRSTNAME.likeIgnoreCase("%" + str +"%"))
                 .or(STAFF.EMAIL.likeIgnoreCase("%" + str +"%"))
+                .fetchInto(StaffRecord.class);
+    }
+
+    public List<StaffRecord> getStaffByCourse(CourseRecord courseRecord) {
+        return getStaffByCourse(courseRecord.getIdcourse());
+    }
+
+    public List<StaffRecord> getStaffByCourse(int id) {
+        return getDSL().select().from(STAFF)
+                .join(REFERENT).on(REFERENT.STAFF_IDSTAFF.eq(STAFF.IDSTAFF))
+                .join(COURSE).on(REFERENT.COURSE_IDCOURSE.eq(COURSE.IDCOURSE))
+                .where(COURSE.IDCOURSE.eq(id))
                 .fetchInto(StaffRecord.class);
     }
 }
