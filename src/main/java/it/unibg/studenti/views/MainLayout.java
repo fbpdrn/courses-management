@@ -79,9 +79,9 @@ public class MainLayout extends AppLayout {
 
     private H1 viewTitle;
 
-    private AuthenticatedUser authenticatedUser;
-    private AccessAnnotationChecker accessChecker;
-    private ResourceBundleWrapper resourceBundle;
+    private final AuthenticatedUser authenticatedUser;
+    private final AccessAnnotationChecker accessChecker;
+    private final ResourceBundleWrapper resourceBundle;
 
     public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker, @Autowired ResourceBundleWrapper resourceBundleWrapper) {
         this.authenticatedUser = authenticatedUser;
@@ -101,6 +101,8 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H1();
         viewTitle.addClassNames("m-0", "text-l");
+        if(VaadinSession.getCurrent().getLocale() == null)
+            VaadinSession.getCurrent().setLocale(Locale.UK);
         Component langSwitch = MenuLangSwitch(VaadinSession.getCurrent().getLocale(), resourceBundle);
         langSwitch.getElement().getStyle()
                 .set("float", "right")
