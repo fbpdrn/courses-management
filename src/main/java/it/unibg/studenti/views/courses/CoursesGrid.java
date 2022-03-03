@@ -8,10 +8,10 @@ import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 
 public class CoursesGrid extends Grid<CourseRecord> {
 
-    private ServiceManager service;
+    private final CoursesLogic logic;
 
-    public CoursesGrid(ServiceManager service, ResourceBundleWrapper resourceBundle, UserInfo currentUser) {
-        this.service = service;
+    public CoursesGrid(CoursesLogic logic, ResourceBundleWrapper resourceBundle) {
+        this.logic = logic;
 
         addColumn(CourseRecord::getIdcourse)
                 .setHeader(resourceBundle.getString("component_courses_id"));
@@ -36,9 +36,10 @@ public class CoursesGrid extends Grid<CourseRecord> {
 
         refresh();
         addItemClickListener(e -> {
-            CoursesDialog dialog = new CoursesDialog(service, resourceBundle, this, e.getItem(), currentUser);
+            CoursesDialog dialog = new CoursesDialog(logic, this, e.getItem(), resourceBundle);
             dialog.open();
         });
+        refresh();
     }
 
 
@@ -47,10 +48,10 @@ public class CoursesGrid extends Grid<CourseRecord> {
     }
 
     public void refresh() {
-        setItems(service.getCourseService().getAll());
+        setItems(logic.getService().getCourseService().getAll());
     }
 
     public void refresh(String str) {
-        setItems(service.getCourseService().getFiltered(str));
+        setItems(logic.getService().getCourseService().getFiltered(str));
     }
 }

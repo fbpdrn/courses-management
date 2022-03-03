@@ -30,7 +30,7 @@ public class StaffService extends DatabaseService implements DatabaseDAO<StaffRe
     public List<StaffRecord> getAll() { return getDSL().selectFrom(STAFF).fetchInto(StaffRecord.class); }
 
     @Override
-    public int insert(StaffRecord staffRecord) {
+    public Integer insert(StaffRecord staffRecord) {
         try {
             return getDSL().insertInto(STAFF).set(staffRecord)
                     .returning(STAFF.IDSTAFF).fetch()
@@ -41,9 +41,14 @@ public class StaffService extends DatabaseService implements DatabaseDAO<StaffRe
     }
 
     @Override
-    public void update(StaffRecord staffRecord) {
-        getDSL().update(STAFF).set(staffRecord)
-                .where(STAFF.IDSTAFF.eq(staffRecord.getIdstaff())).execute();
+    public Integer update(StaffRecord staffRecord) {
+        try {
+            getDSL().update(STAFF).set(staffRecord)
+                    .where(STAFF.IDSTAFF.eq(staffRecord.getIdstaff())).execute();
+            return 1;
+        } catch(DuplicateKeyException e) {
+            return -1;
+        }
     }
 
     @Override

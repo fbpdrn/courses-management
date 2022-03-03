@@ -3,6 +3,7 @@ package it.unibg.studenti.data.service;
 import it.unibg.studenti.generated.tables.records.UserRecord;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,14 +31,23 @@ public class UserService extends DatabaseService implements DatabaseDAO<UserReco
     }
 
     @Override
-    public int insert(UserRecord record) {
-        return getDSL().insertInto(USER).set(record).returning(USER.IDUSER).fetch()
-                .getValue(0, USER.IDUSER);
+    public Integer insert(UserRecord record) {
+        try {
+            return getDSL().insertInto(USER).set(record).returning(USER.IDUSER).fetch()
+                    .getValue(0, USER.IDUSER);
+        } catch(DuplicateKeyException e) {
+            return -1;
+        }
     }
 
     @Override
-    public void update(UserRecord record) {
-        getDSL().update(USER).set(record).where(USER.IDUSER.eq(record.getIduser())).execute();
+    public Integer update(UserRecord record) {
+        try {
+            getDSL().update(USER).set(record).where(USER.IDUSER.eq(record.getIduser())).execute();
+            return 1;
+        } catch(DuplicateKeyException e) {
+            return -1;
+        }
     }
 
     @Override

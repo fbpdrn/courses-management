@@ -34,7 +34,7 @@ public class DegreeService extends DatabaseService implements DatabaseDAO<Degree
     }
 
     @Override
-    public int insert(DegreeRecord degreeRecord) {
+    public Integer insert(DegreeRecord degreeRecord) {
         try {
             return getDSL().insertInto(DEGREE).set(degreeRecord)
                     .returning(DEGREE.IDDEGREE).fetch()
@@ -45,9 +45,14 @@ public class DegreeService extends DatabaseService implements DatabaseDAO<Degree
     }
 
     @Override
-    public void update(DegreeRecord degreeRecord) {
-        getDSL().update(DEGREE).set(degreeRecord)
-                .where(DEGREE.IDDEGREE.eq(degreeRecord.getIddegree())).execute();
+    public Integer update(DegreeRecord degreeRecord) {
+        try {
+            getDSL().update(DEGREE).set(degreeRecord)
+                    .where(DEGREE.IDDEGREE.eq(degreeRecord.getIddegree())).execute();
+            return 1;
+        } catch(DuplicateKeyException e) {
+            return -1;
+        }
     }
 
     @Override

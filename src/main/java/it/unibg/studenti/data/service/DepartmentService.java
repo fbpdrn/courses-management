@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static it.unibg.studenti.generated.tables.Department.DEPARTMENT;
@@ -27,7 +28,7 @@ public class DepartmentService extends DatabaseService implements DatabaseDAO<De
     public List<DepartmentRecord> getAll() { return getDSL().selectFrom(DEPARTMENT).fetchInto(DepartmentRecord.class); }
 
     @Override
-    public int insert(DepartmentRecord departmentRecord) {
+    public Integer insert(@NotNull DepartmentRecord departmentRecord) {
         try {
             return getDSL().insertInto(DEPARTMENT).set(departmentRecord)
                     .returning(DEPARTMENT.IDDEPARTMENT).fetch()
@@ -38,9 +39,14 @@ public class DepartmentService extends DatabaseService implements DatabaseDAO<De
     }
 
     @Override
-    public void update(DepartmentRecord departmentRecord) {
-        getDSL().update(DEPARTMENT).set(departmentRecord)
-                .where(DEPARTMENT.IDDEPARTMENT.eq(departmentRecord.getIddepartment())).execute();
+    public Integer update(@NotNull DepartmentRecord departmentRecord) {
+        try {
+            getDSL().update(DEPARTMENT).set(departmentRecord)
+                    .where(DEPARTMENT.IDDEPARTMENT.eq(departmentRecord.getIddepartment())).execute();
+            return 1;
+        } catch(DuplicateKeyException e) {
+            return -1;
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import it.unibg.studenti.data.service.ServiceManager;
 import it.unibg.studenti.security.AuthenticatedUser;
 import it.unibg.studenti.views.AbstractView;
 import it.unibg.studenti.views.MainLayout;
+import it.unibg.studenti.views.staff.StaffLogic;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,21 +20,22 @@ import javax.annotation.security.RolesAllowed;
 @Route(value = "courses", layout = MainLayout.class)
 @RolesAllowed("user")
 public class CoursesView extends AbstractView {
+    private final CoursesLogic logic;
 
     public CoursesView(@Autowired ServiceManager service, @Autowired ResourceBundleWrapper resourceBundle, @Autowired AuthenticatedUser currentUser) {
         UserInfo userInfo = getUserInfo(service, currentUser);
         setSpacing(false);
         setSizeFull();
 
-        CoursesGrid grid = new CoursesGrid(service,
-                resourceBundle,
-                userInfo);
+        logic = new CoursesLogic(this, service, resourceBundle, userInfo);
+
+        CoursesGrid grid = new CoursesGrid(logic, resourceBundle);
 
         HorizontalLayout topLayout = new HorizontalLayout();
         Button btnNew = new Button(resourceBundle.getString("component_common_button_new"));
-        btnNew.addClickListener(e -> new CoursesDialog(service, resourceBundle, grid, null, userInfo).open());
+        btnNew.addClickListener(e -> new CoursesDialog(logic,grid,null, resourceBundle).open());
         TextField searchBar = new TextField();
-        searchBar.setPlaceholder("CERCA PER NOME, ID, ECC");
+        searchBar.setPlaceholder(resourceBundle.getString("component_courses_searchbar"));
         searchBar.addValueChangeListener(e -> service.getCourseService().getFiltered(e.getValue()));
         topLayout.add(btnNew);
         topLayout.addAndExpand(searchBar);

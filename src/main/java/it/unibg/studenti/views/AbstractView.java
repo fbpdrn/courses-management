@@ -2,6 +2,7 @@ package it.unibg.studenti.views;
 
 import com.vaadin.collaborationengine.UserInfo;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import it.unibg.studenti.data.service.ServiceManager;
 import it.unibg.studenti.generated.tables.records.UserRecord;
@@ -20,7 +21,9 @@ public class AbstractView extends VerticalLayout {
                 currentUser.getProfilepictureurl());
     }
 
-    public void getNotification(String message) {
+    public void getNotification(String message, boolean isSuccessful) {
         Notification notification = Notification.show(message);
+        if(!isSuccessful)
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
     }
 }

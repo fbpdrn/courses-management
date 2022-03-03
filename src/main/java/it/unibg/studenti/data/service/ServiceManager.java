@@ -1,11 +1,10 @@
 package it.unibg.studenti.data.service;
 
-import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceManager extends DatabaseService{
+public class ServiceManager {
     private DepartmentService departmentService;
     private StaffService staffService;
     private UserService userService;
@@ -13,9 +12,8 @@ public class ServiceManager extends DatabaseService{
     private YearService yearService;
     private DegreeService degreeService;
 
-    public ServiceManager(@Autowired DSLContext dsl, @Autowired DepartmentService departmentService, @Autowired StaffService staffService, @Autowired UserService userService,
+    public ServiceManager(@Autowired DepartmentService departmentService, @Autowired StaffService staffService, @Autowired UserService userService,
                           @Autowired CourseService courseService, @Autowired YearService yearService, @Autowired DegreeService degreeService) {
-        super(dsl);
         this.departmentService = departmentService;
         this.staffService = staffService;
         this.userService = userService;

@@ -19,6 +19,12 @@ public class Utility {
         return Double.parseDouble(o.toString());
     }
 
+    public static Integer convertToInt(Object o) {
+        if(o == null)
+            return null;
+        return Integer.parseInt(o.toString());
+    }
+
     public static String convertToString(Object o) {
         if(o == null)
             return null;

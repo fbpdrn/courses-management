@@ -3,17 +3,15 @@ package it.unibg.studenti.views.departments;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
-import it.unibg.studenti.data.service.DepartmentService;
 import it.unibg.studenti.generated.tables.records.DepartmentRecord;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 
 public class DepartmentsGrid extends Grid<DepartmentRecord> {
-
-    private final DepartmentService service;
-    public DepartmentsGrid(DepartmentService service, ResourceBundleWrapper resourceBundle){
+    private final DepartmentsLogic logic;
+    public DepartmentsGrid(DepartmentsLogic logic, ResourceBundleWrapper resourceBundle){
         setSizeFull();
-        this.service = service;
-        DepartmentsDialog dialog = new DepartmentsDialog(service, this, false, resourceBundle);
+        this.logic = logic;
+        DepartmentsDialog dialog = new DepartmentsDialog(logic, this, false, resourceBundle);
         addColumn(DepartmentRecord::getIddepartment)
                 .setHeader(resourceBundle.getString("component_departments_id"))
                 .setFlexGrow(20)
@@ -32,7 +30,7 @@ public class DepartmentsGrid extends Grid<DepartmentRecord> {
                 .setHeader(resourceBundle.getString("component_departments_phone"))
                 .setFlexGrow(20);
         addItemClickListener(e -> dialog.openAndSetBinder(e.getItem()));
-        setItems(service.getAll());
+        setItems(logic.getService().getDepartmentService().getAll());
     }
 
     private static Renderer<DepartmentRecord> createLocationRenderer() {
@@ -55,6 +53,6 @@ public class DepartmentsGrid extends Grid<DepartmentRecord> {
     }
 
     public void refresh() {
-        setItems(service.getAll());
+        setItems(logic.getService().getDepartmentService().getAll());
     }
 }

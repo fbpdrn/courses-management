@@ -8,6 +8,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import it.unibg.studenti.data.Color;
 import it.unibg.studenti.data.service.DepartmentService;
 import it.unibg.studenti.generated.tables.records.DepartmentRecord;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
@@ -17,14 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DepartmentsDialog extends Dialog {
     private final Binder<DepartmentRecord> binder;
 
-    public DepartmentsDialog(@Autowired DepartmentService service, DepartmentsGrid departmentsGrid,
+    public DepartmentsDialog(DepartmentsLogic logic, DepartmentsGrid departmentsGrid,
                              boolean isNew, ResourceBundleWrapper resourceBundle){
         binder = new Binder<>();
         FormLayout layout = new FormLayout();
 
         Label errorMessage = new Label(resourceBundle.getString("error_departments_name"));
         errorMessage.setVisible(false);
-        errorMessage.getStyle().set("color", "red");
+        errorMessage.getStyle().set("color", Color.ERROR.getColorValue());
 
         TextField tfName = new TextField();
         tfName.setRequired(true);
@@ -69,19 +70,31 @@ public class DepartmentsDialog extends Dialog {
         btnSave.addClickListener(e -> {
             if (binder.isValid()) {
                 if (isNew)
-                    service.insert(binder.getBean());
+                    if(logic.insert(binder.getBean())){
+                        departmentsGrid.refresh();
+                        this.close();
+                    } else {
+                        errorMessage.setText(resourceBundle.getString("error_common_duplicatekey"));
+                        errorMessage.setVisible(true);
+                    }
                 else
-                    service.update(binder.getBean());
-                departmentsGrid.refresh();
-                this.close();
-            } else
+                    if(logic.update(binder.getBean())) {
+                        departmentsGrid.refresh();
+                        this.close();
+                    } else {
+                        errorMessage.setText(resourceBundle.getString("error_common_duplicatekey"));
+                        errorMessage.setVisible(true);
+                    }
+            } else {
+                errorMessage.setText(resourceBundle.getString("error_departments_name"));
                 errorMessage.setVisible(true);
+            }
         });
         Button btnAbort = new Button(resourceBundle.getString("component_common_button_abort"));
         btnAbort.addClickListener(e -> this.close());
         Button btnDelete = new Button(resourceBundle.getString("component_common_button_delete"));
         btnDelete.addClickListener(e -> {
-            service.delete(binder.getBean());
+            logic.delete(binder.getBean());
             departmentsGrid.refresh();
             this.close();
         });

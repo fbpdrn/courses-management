@@ -38,7 +38,7 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
     }
 
     @Override
-    public int insert(CourseRecord courseRecord) {
+    public Integer insert(CourseRecord courseRecord) {
         try {
             return getDSL().insertInto(COURSE).set(courseRecord)
                     .returning(COURSE.IDCOURSE).fetch()
@@ -49,9 +49,14 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
     }
 
     @Override
-    public void update(CourseRecord courseRecord) {
-        getDSL().update(COURSE).set(courseRecord)
-                .where(COURSE.IDCOURSE.eq(courseRecord.getIdcourse())).execute();
+    public Integer update(CourseRecord courseRecord) {
+        try {
+            getDSL().update(COURSE).set(courseRecord)
+                    .where(COURSE.IDCOURSE.eq(courseRecord.getIdcourse())).execute();
+            return 1;
+        } catch(DuplicateKeyException e) {
+            return -1;
+        }
     }
 
     @Override

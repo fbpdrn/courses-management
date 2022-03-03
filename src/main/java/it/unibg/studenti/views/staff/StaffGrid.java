@@ -3,18 +3,16 @@ package it.unibg.studenti.views.staff;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
-import it.unibg.studenti.data.service.ServiceManager;
 import it.unibg.studenti.generated.tables.records.StaffRecord;
-import it.unibg.studenti.generated.tables.records.UserRecord;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 
 public class StaffGrid extends Grid<StaffRecord> {
 
-    private final ServiceManager service;
-    public StaffGrid(ServiceManager service, ResourceBundleWrapper resourceBundle, UserRecord currentUser) {
-        setSizeFull();
-        this.service = service;
+    private final StaffLogic logic;
 
+    public StaffGrid(StaffLogic logic, ResourceBundleWrapper resourceBundle) {
+        setSizeFull();
+        this.logic = logic;
         addColumn(StaffRecord::getIdstaff)
                 .setHeader("ID");
         addColumn(createNameRenderer())
@@ -26,10 +24,10 @@ public class StaffGrid extends Grid<StaffRecord> {
                 .setHeader("Location");
 
         addItemClickListener(e -> {
-            StaffDialog dialog = new StaffDialog(service, this, e.getItem(), resourceBundle, currentUser);
+            StaffDialog dialog = new StaffDialog(logic, this, e.getItem(), resourceBundle);
             dialog.open();
         });
-        setItems(service.getStaffService().getAll());
+        refresh();
     }
 
     private static Renderer<StaffRecord> createNameRenderer() {
@@ -78,10 +76,10 @@ public class StaffGrid extends Grid<StaffRecord> {
     }
 
     public void refresh() {
-        setItems(service.getStaffService().getAll());
+        setItems(logic.getService().getStaffService().getAll());
     }
 
     public void refresh(String str) {
-        setItems(service.getStaffService().getFiltered(str));
+        setItems(logic.getService().getStaffService().getFiltered(str));
     }
 }
