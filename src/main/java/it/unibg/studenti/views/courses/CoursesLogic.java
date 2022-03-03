@@ -48,8 +48,8 @@ public class CoursesLogic implements LogicInterface<CoursesView, CourseRecord> {
 
     @Override
     public boolean update(CourseRecord record) {
-        boolean result = getService().getCourseService().insert(record) > 0;
-        getView().getNotification((result) ? resourceBundle.getString("database_insert") : resourceBundle.getString("error_common_duplicatekey"), result);
+        boolean result = getService().getCourseService().update(record) > 0;
+        getView().getNotification((result) ? resourceBundle.getString("database_update") : resourceBundle.getString("error_common_duplicatekey"), result);
         return result;
     }
 

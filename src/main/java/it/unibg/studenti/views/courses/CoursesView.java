@@ -4,13 +4,13 @@ import com.vaadin.collaborationengine.UserInfo;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import it.unibg.studenti.data.service.ServiceManager;
 import it.unibg.studenti.security.AuthenticatedUser;
 import it.unibg.studenti.views.AbstractView;
 import it.unibg.studenti.views.MainLayout;
-import it.unibg.studenti.views.staff.StaffLogic;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +36,8 @@ public class CoursesView extends AbstractView {
         btnNew.addClickListener(e -> new CoursesDialog(logic,grid,null, resourceBundle).open());
         TextField searchBar = new TextField();
         searchBar.setPlaceholder(resourceBundle.getString("component_courses_searchbar"));
-        searchBar.addValueChangeListener(e -> service.getCourseService().getFiltered(e.getValue()));
+        searchBar.addValueChangeListener(e -> grid.refresh(e.getValue()));
+        searchBar.setValueChangeMode(ValueChangeMode.EAGER);
         topLayout.add(btnNew);
         topLayout.addAndExpand(searchBar);
 

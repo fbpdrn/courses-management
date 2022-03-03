@@ -15,6 +15,8 @@ public class CoursesGrid extends Grid<CourseRecord> {
 
         addColumn(CourseRecord::getIdcourse)
                 .setHeader(resourceBundle.getString("component_courses_id"));
+        addColumn(CourseRecord::getYearoff)
+                .setHeader(resourceBundle.getString("component_courses_yearoff"));
         addColumn(CourseRecord::getCode)
                 .setHeader(resourceBundle.getString("component_courses_code"));
         addColumn(CourseRecord::getSsd)
