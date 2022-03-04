@@ -4,12 +4,11 @@ import it.unibg.studenti.generated.tables.records.CourseRecord;
 import it.unibg.studenti.generated.tables.records.DegreeRecord;
 import it.unibg.studenti.generated.tables.records.StaffRecord;
 import org.jooq.DSLContext;
-import org.jooq.Record1;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import static it.unibg.studenti.generated.tables.Course.COURSE;
 import static it.unibg.studenti.generated.tables.Degree.DEGREE;
@@ -102,14 +101,15 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
                 .fetchInto(CourseRecord.class);
     }
 
-    public Record1<BigDecimal> getHoursAssigned(CourseRecord courseRecord){
+    public Double getHoursAssigned(CourseRecord courseRecord){
         return getHoursAssigned(courseRecord.getIdcourse());
     }
 
-    public Record1<BigDecimal> getHoursAssigned(int courseid){
-        return getDSL().select(sum(REFERENT.HOURS))
+    public Double getHoursAssigned(int courseid){
+        Double val = getDSL().select(sum(REFERENT.HOURS))
                 .from(REFERENT)
                 .join(COURSE).on(REFERENT.COURSE_IDCOURSE.eq(COURSE.IDCOURSE))
-                .where(COURSE.IDCOURSE.eq(courseid)).fetchOne();
+                .where(COURSE.IDCOURSE.eq(courseid)).fetchOneInto(Double.class);
+        return Objects.requireNonNullElse(val, 0.0);
     }
 }

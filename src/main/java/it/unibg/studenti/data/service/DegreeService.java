@@ -73,7 +73,7 @@ public class DegreeService extends DatabaseService implements DatabaseDAO<Degree
 
     public List<DegreeRecord> getDegreeByYear(int id) {
         return getDSL().selectFrom(DEGREE)
-                .where(DEGREE.YEAR_IDYEAR.eq(id))
+                .where(DEGREE.YEARID.eq(id))
                 .fetchInto(DegreeRecord.class);
     }
 
