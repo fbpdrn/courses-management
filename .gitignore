@@ -20,3 +20,4 @@ error-screenshots/
 webpack.generated.js
 frontend/index.html
 webpack.config.js
+/src/main/java/it/unibg/studenti/generated/
