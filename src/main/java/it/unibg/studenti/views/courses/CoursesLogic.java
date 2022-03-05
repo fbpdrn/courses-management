@@ -2,6 +2,7 @@ package it.unibg.studenti.views.courses;
 
 import com.vaadin.collaborationengine.UserInfo;
 import it.unibg.studenti.data.service.ServiceManager;
+import it.unibg.studenti.generated.tables.records.ReferentRecord;
 import it.unibg.studenti.views.LogicInterface;
 import it.unibg.studenti.generated.tables.records.CourseRecord;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
@@ -55,6 +56,17 @@ public class CoursesLogic implements LogicInterface<CoursesView, CourseRecord> {
 
     @Override
     public void delete(CourseRecord record) {
+        getService().getCourseService().delete(record);
+        getView().getNotification(resourceBundle.getString("database_delete"), true);
+    }
+
+    public boolean insert(ReferentRecord record) {
+        boolean result = getService().getCourseService().insert(record) > 0;
+        getView().getNotification((result) ? resourceBundle.getString("database_insert") : resourceBundle.getString("error_common_duplicatekey"), result);
+        return result;
+    }
+
+    public void delete(ReferentRecord record) {
         getService().getCourseService().delete(record);
         getView().getNotification(resourceBundle.getString("database_delete"), true);
     }

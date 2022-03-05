@@ -2,6 +2,7 @@ package it.unibg.studenti.views.courses;
 
 import com.vaadin.collaborationengine.UserInfo;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -30,6 +31,7 @@ public class CoursesView extends AbstractView {
         logic = new CoursesLogic(this, service, resourceBundle, userInfo);
 
         CoursesGrid grid = new CoursesGrid(logic, resourceBundle);
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         HorizontalLayout topLayout = new HorizontalLayout();
         Button btnNew = new Button(resourceBundle.getString("component_common_button_new"));

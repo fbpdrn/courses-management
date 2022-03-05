@@ -1,8 +1,11 @@
 package it.unibg.studenti.views.courses;
 
-import com.vaadin.collaborationengine.UserInfo;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import it.unibg.studenti.data.service.ServiceManager;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import it.unibg.studenti.generated.tables.records.CourseRecord;
 import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 
@@ -35,15 +38,19 @@ public class CoursesGrid extends Grid<CourseRecord> {
                 .setHeader(resourceBundle.getString("component_courses_period"));
         addColumn(CourseRecord::getYear)
                 .setHeader(resourceBundle.getString("component_courses_year"));
-
-        refresh();
-        addItemClickListener(e -> {
-            CoursesDialog dialog = new CoursesDialog(logic, this, e.getItem(), resourceBundle);
-            dialog.open();
-        });
+        addColumn(new ComponentRenderer<>(e -> {
+            HorizontalLayout layout = new HorizontalLayout();
+            Button btnStaff = new Button();
+            btnStaff.setIcon(new Icon(VaadinIcon.CALENDAR_USER));
+            btnStaff.addClickListener(j -> new CourseAssignDialog(logic, e, resourceBundle).open());
+            Button btnEdit = new Button();
+            btnEdit.setIcon(new Icon(VaadinIcon.EDIT));
+            btnEdit.addClickListener(j -> new CoursesDialog(logic, this, e, resourceBundle).open());
+            layout.add(btnStaff, btnEdit);
+            return layout;
+        }));
         refresh();
     }
-
 
     public void refresh(CourseRecord item) {
         getDataCommunicator().refresh(item);

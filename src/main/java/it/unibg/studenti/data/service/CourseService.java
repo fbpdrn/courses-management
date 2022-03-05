@@ -2,7 +2,9 @@ package it.unibg.studenti.data.service;
 
 import it.unibg.studenti.generated.tables.records.CourseRecord;
 import it.unibg.studenti.generated.tables.records.DegreeRecord;
+import it.unibg.studenti.generated.tables.records.ReferentRecord;
 import it.unibg.studenti.generated.tables.records.StaffRecord;
+import it.unibg.studenti.views.utils.Utility;
 import org.jooq.DSLContext;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -111,5 +113,27 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
                 .join(COURSE).on(REFERENT.COURSE_IDCOURSE.eq(COURSE.IDCOURSE))
                 .where(COURSE.IDCOURSE.eq(courseid)).fetchOneInto(Double.class);
         return Objects.requireNonNullElse(val, 0.0);
+    }
+
+    public List<ReferentRecord> getWorkAssigned(CourseRecord record) {
+        return getDSL().select().from(COURSE)
+                .join(REFERENT).on(REFERENT.COURSE_IDCOURSE.eq(COURSE.IDCOURSE))
+                .where(COURSE.IDCOURSE.eq(record.getIdcourse()))
+                .fetchInto(ReferentRecord.class);
+    }
+
+    public Integer insert(ReferentRecord referentRecord) {
+        try {
+            getDSL().insertInto(REFERENT).set(referentRecord).execute();
+            return 1;
+        } catch(DuplicateKeyException e) {
+            return -1;
+        }
+    }
+
+    public void delete(ReferentRecord referentRecord) {
+        getDSL().delete(REFERENT).where(REFERENT.STAFF_IDSTAFF.eq(referentRecord.getStaffIdstaff())
+                .and(REFERENT.COURSE_IDCOURSE.eq(referentRecord.getCourseIdcourse()))
+                .and(REFERENT.TYPE.eq(referentRecord.getType()))).execute();
     }
 }
