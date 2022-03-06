@@ -22,7 +22,7 @@ COPY --chown=nruser:nruser package.json ./
 COPY --chown=nruser:nruser package-lock.json* pnpm-lock.yaml* webpack.config.js* ./
 
 # Build the production package, assuming that we validated the version before so no need for running tests again
-RUN mvn clean package -DskipTests -Pproduction
+RUN mvn clean package -DskipTests -Pproduction -Pjooq-generate
 
 # Running stage: the part that is used for running the application
 FROM openjdk:17-jdk-slim
