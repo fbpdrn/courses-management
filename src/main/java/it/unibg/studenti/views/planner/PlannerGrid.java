@@ -2,6 +2,7 @@ package it.unibg.studenti.views.planner;
 
 import com.vaadin.flow.component.avatar.AvatarGroup;
 import com.vaadin.flow.component.avatar.AvatarGroup.AvatarGroupItem;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,11 +16,12 @@ import it.unibg.studenti.views.utils.ResourceBundleWrapper;
 public class PlannerGrid extends Grid<CourseRecord> {
 
     private final PlannerLogic logic;
+    private Double lastYear = -1.0;
     public PlannerGrid(PlannerLogic logic, ResourceBundleWrapper resourceBundle) {
         this.logic = logic;
 
         addColumn(new ComponentRenderer<>(e-> new Span("[" + e.getYearoff() + "] " + e.getSsd() + "/" + e.getCode())))
-                .setHeader("Y.OFF/SSD/Code/");
+                .setHeader(resourceBundle.getString("component_courses_abbr"));
         addColumn(CourseRecord::getName)
                 .setHeader(resourceBundle.getString("component_courses_name"));
         addColumn(CourseRecord::getCredits)
@@ -31,26 +33,38 @@ public class PlannerGrid extends Grid<CourseRecord> {
             }
             return avatarGroup;
         }))
-                .setHeader("Staff");
+                .setHeader(resourceBundle.getString("component_courses_staff"));
         addColumn(CourseRecord::getPeriod)
                 .setSortable(true)
                 .setHeader(resourceBundle.getString("component_courses_period"));
         addColumn(new ComponentRenderer<>(e -> {
-            Icon status;
-            double val = logic.getService().getCourseService().getOne(e.getIdcourse()).getHours() - logic.getService().getCourseService().getHoursAssigned(e.getIdcourse());
-            if(val > 0)
-                status = createIcon(VaadinIcon.WARNING, "Hours not assigned", "badge error");
-            else if (val < 0)
-                status = createIcon(VaadinIcon.CLOSE_SMALL, "Too many hours assigned", "badge error");
-            else
-                status = createIcon(VaadinIcon.CHECK, "Hours assigned", "badge success");
-            return status;
+            Icon status = createIcon(VaadinIcon.EXCLAMATION_CIRCLE, resourceBundle.getString("error_planner_errorhours"), "badge error");
+            try {
+                double val = logic.getService().getCourseService().getOne(e.getIdcourse()).getHours() - logic.getService().getCourseService().getHoursAssigned(e.getIdcourse());
+                if (val > 0)
+                    status = createIcon(VaadinIcon.WARNING, resourceBundle.getString("error_planner_lefthours"), "badge error");
+                else if (val < 0)
+                    status = createIcon(VaadinIcon.CLOSE_SMALL, resourceBundle.getString("error_planner_toomanyhours"), "badge error");
+                else
+                    status = createIcon(VaadinIcon.CHECK, resourceBundle.getString("error_planner_hoursok"), "badge success");
+                return status;
+            } catch (NullPointerException n) {
+                return status;
+            }
         }))
-                .setHeader("Hours Assigned");
-
-        addItemClickListener(e -> {
-            logic.getView().getNotification("Not implemented", true);
-        });
+                .setHeader(resourceBundle.getString("component_courses_hours"));
+        addColumn(new ComponentRenderer<>(e -> {
+            Button btnDelete = new Button();
+            Icon icon = new Icon(VaadinIcon.TRASH);
+            icon.setColor("red");
+            btnDelete.setIcon(icon);
+            btnDelete.addClickListener(j -> {
+                logic.getService().getDegreeService().removeCourse(logic.getCurrentDegree(), e);
+                refresh(logic.getCurrentDegree());
+            });
+            return btnDelete;
+        }))
+                .setHeader(resourceBundle.getString("component_common_actions"));
     }
 
     public void refresh(CourseRecord item) {
@@ -59,6 +73,11 @@ public class PlannerGrid extends Grid<CourseRecord> {
 
     public void refresh(DegreeRecord degreeRecord, Double year) {
         setItems(logic.getService().getCourseService().getCoursesByDegreeAndYear(degreeRecord, year));
+        lastYear = year;
+    }
+
+    public void refresh(DegreeRecord degreeRecord) {
+        setItems(logic.getService().getCourseService().getCoursesByDegreeAndYear(degreeRecord, lastYear));
     }
 
     private Icon createIcon(VaadinIcon vaadinIcon, String label, String theme) {

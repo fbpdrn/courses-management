@@ -96,11 +96,18 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
     }
 
     public List<CourseRecord> getCoursesByDegreeAndYear(int degreeid, Double year){
-        return getDSL().select().from(COURSE)
-                .join(DEGREE_HAS_COURSE).on(COURSE.IDCOURSE.eq(DEGREE_HAS_COURSE.COURSE_IDCOURSE))
-                .join(DEGREE).on(DEGREE.IDDEGREE.eq(DEGREE_HAS_COURSE.DEGREE_IDDEGREE))
-                .where(COURSE.YEAR.eq(year).and(DEGREE.IDDEGREE.eq(degreeid)))
-                .fetchInto(CourseRecord.class);
+        if(year > 0)
+            return getDSL().select().from(COURSE)
+                    .join(DEGREE_HAS_COURSE).on(COURSE.IDCOURSE.eq(DEGREE_HAS_COURSE.COURSE_IDCOURSE))
+                    .join(DEGREE).on(DEGREE.IDDEGREE.eq(DEGREE_HAS_COURSE.DEGREE_IDDEGREE))
+                    .where(COURSE.YEAR.eq(year).and(DEGREE.IDDEGREE.eq(degreeid)))
+                    .fetchInto(CourseRecord.class);
+        else
+            return getDSL().select().from(COURSE)
+                    .join(DEGREE_HAS_COURSE).on(COURSE.IDCOURSE.eq(DEGREE_HAS_COURSE.COURSE_IDCOURSE))
+                    .join(DEGREE).on(DEGREE.IDDEGREE.eq(DEGREE_HAS_COURSE.DEGREE_IDDEGREE))
+                    .where(DEGREE.IDDEGREE.eq(degreeid))
+                    .fetchInto(CourseRecord.class);
     }
 
     public Double getHoursAssigned(CourseRecord courseRecord){
@@ -135,5 +142,13 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
         getDSL().delete(REFERENT).where(REFERENT.STAFF_IDSTAFF.eq(referentRecord.getStaffIdstaff())
                 .and(REFERENT.COURSE_IDCOURSE.eq(referentRecord.getCourseIdcourse()))
                 .and(REFERENT.TYPE.eq(referentRecord.getType()))).execute();
+    }
+
+    public List<String> getAllYearOff() {
+        return getDSL().selectDistinct(COURSE.YEAROFF).from(COURSE).fetchInto(String.class);
+    }
+
+    public List<CourseRecord> getAllByYearOff(String yearOff) {
+        return getDSL().selectFrom(COURSE).where(COURSE.YEAROFF.eq(yearOff)).fetchInto(CourseRecord.class);
     }
 }

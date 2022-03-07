@@ -102,4 +102,14 @@ public class DegreeService extends DatabaseService implements DatabaseDAO<Degree
             return -1;
         }
     }
+
+    public void removeCourse(DegreeRecord degreeRecord, CourseRecord courseRecord) {
+        removeCourse(degreeRecord.getIddegree(), courseRecord.getIdcourse());
+    }
+
+    public void removeCourse(int id, int courseid) {
+        getDSL().delete(DEGREE_HAS_COURSE)
+                .where(DEGREE_HAS_COURSE.DEGREE_IDDEGREE.eq(id).and(DEGREE_HAS_COURSE.COURSE_IDCOURSE.eq(courseid)))
+                .execute();
+    }
 }

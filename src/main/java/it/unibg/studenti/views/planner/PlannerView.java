@@ -3,7 +3,6 @@ package it.unibg.studenti.views.planner;
 import com.vaadin.collaborationengine.UserInfo;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
@@ -30,10 +29,9 @@ public class PlannerView extends AbstractView {
 
     private final PlannerLogic logic;
     private final PlannerGrid grid;
-    private final Icon checkStaff;
-    private final Icon checkCredits;
     private DegreeRecord selectedDegree;
     private Select<YearRecord> selectYear;
+    private final Button btnCourse;
 
     public PlannerView(@Autowired ServiceManager service, @Autowired ResourceBundleWrapper resourceBundle, @Autowired AuthenticatedUser currentUser) {
         UserInfo userInfo = getUserInfo(service, currentUser);
@@ -46,18 +44,23 @@ public class PlannerView extends AbstractView {
         add(createTopBar(logic, resourceBundle));
         add(grid);
 
-        HorizontalLayout statusLayout = new HorizontalLayout();
-        checkStaff = new Icon(VaadinIcon.USER_CARD);
-        checkStaff.setColor(Color.UNKNOWN.getColorValue());
-        checkCredits = new Icon(VaadinIcon.NOTEBOOK);
-        checkCredits.setColor(Color.UNKNOWN.getColorValue());
-        statusLayout.add(checkStaff, checkCredits);
-        add(statusLayout);
+        btnCourse = new Button(resourceBundle.getString("component_planner_button_addcourse"));
+        btnCourse.addClickListener(e -> {
+            new PlannerCourseDialog(logic, grid, resourceBundle).open();
+        });
+        btnCourse.setEnabled(false);
+
+        btnCourse.getElement().getStyle()
+                .set("float", "right")
+                .set("margin-right", "10px")
+                .set("margin-left","auto");;
+
+        add(btnCourse);
     }
 
     private HorizontalLayout createTopBar(PlannerLogic logic, ResourceBundleWrapper resourceBundle){
         HorizontalLayout topLayout = new HorizontalLayout();
-        Button btnNew = new Button(resourceBundle.getString("component_common_button_new"));
+        Button btnNew = new Button(resourceBundle.getString("component_planner_button_newdegree"));
         btnNew.addClickListener(e -> new PlannerDegreeDialog(logic, null, resourceBundle).open());
         Button btnEdit = new Button(resourceBundle.getString("component_common_button_edit"));
         btnEdit.addClickListener(e -> new PlannerDegreeDialog(logic, getSelectedDegree(), resourceBundle).open());
@@ -82,6 +85,10 @@ public class PlannerView extends AbstractView {
         Select<Double> selectAccYear = new Select<>();
         selectDegree.setEnabled(false);
         selectAccYear.setEnabled(false);
+        selectAccYear.setItemLabelGenerator(e -> {
+            if (e.intValue() < 0.0) return (resourceBundle.getString("component_planner_all"));
+            else return String.valueOf(e.intValue());
+        });
         selectYear.setItems(logic.getService().getYearService().getAll());
 
         selectYear.addValueChangeListener(e -> {
@@ -97,6 +104,8 @@ public class PlannerView extends AbstractView {
                 selectDegree.setItems(logic.getService().getDegreeService().getDegreeByYear(e.getValue()));
             btnEdit.setEnabled(false);
             btnPost.setEnabled(false);
+            logic.setCurrentDegree(null);
+            btnCourse.setEnabled(false);
         });
         selectDegree.addValueChangeListener(e -> {
             ArrayList<Double> list = new ArrayList<>();
@@ -107,9 +116,12 @@ public class PlannerView extends AbstractView {
             } else
                 selectAccYear.setEnabled(true);
             if(e.getValue()!=null) {
+                list.add(-1.0);
                 for (int i = 1; i <= e.getValue().getAccyear(); i++)
                     list.add(Utility.convertToDouble(i));
                 setSelectedDegree(e.getValue());
+                logic.setCurrentDegree(getSelectedDegree());
+                btnCourse.setEnabled(true);
             }
             selectAccYear.setItems(list);
             btnEdit.setEnabled(true);
@@ -120,7 +132,10 @@ public class PlannerView extends AbstractView {
                 btnPost.setText(resourceBundle.getString("component_planner_remove"));
         });
 
-        selectAccYear.addValueChangeListener(e -> grid.refresh(getSelectedDegree(),e.getValue()));
+        selectAccYear.addValueChangeListener(e -> {
+            logic.setCurrentDegree(getSelectedDegree());
+            grid.refresh(getSelectedDegree(),e.getValue());
+        });
         selectYear.setItemLabelGenerator(e -> e.getYearstart() + " → " +e.getYearend());
         selectDegree.setItemLabelGenerator(e-> e.getCode() + " - " + e.getName());
         selectAccYear.setItemLabelGenerator(e -> String.valueOf(e.intValue()));
@@ -138,14 +153,6 @@ public class PlannerView extends AbstractView {
 
     public PlannerGrid getGrid() {
         return grid;
-    }
-
-    public Icon getCheckStaff() {
-        return checkStaff;
-    }
-
-    public Icon getCheckCredits() {
-        return checkCredits;
     }
 
     public void changeStatusIcon(Icon icon, Color color){
