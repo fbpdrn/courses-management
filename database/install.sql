@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `course_management`.`user` (
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE)
 ENGINE = InnoDB;
 
-CREATE USER 'cm_user' IDENTIFIED BY 'cm_pass';
+CREATE USER 'cm_user'@'%' IDENTIFIED BY 'cm_pass';
 
 GRANT ALL ON `course_management`.* TO 'cm_user';
 
