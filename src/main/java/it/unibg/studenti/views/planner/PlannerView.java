@@ -53,7 +53,7 @@ public class PlannerView extends AbstractView {
         btnCourse.getElement().getStyle()
                 .set("float", "right")
                 .set("margin-right", "10px")
-                .set("margin-left","auto");;
+                .set("margin-left","auto");
 
         add(btnCourse);
     }
