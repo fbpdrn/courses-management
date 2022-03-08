@@ -17,6 +17,7 @@ public class PlannerGrid extends Grid<CourseRecord> {
 
     private final PlannerLogic logic;
     private Double lastYear = -1.0;
+    private final Column<CourseRecord> actionsColumn;
     public PlannerGrid(PlannerLogic logic, ResourceBundleWrapper resourceBundle) {
         this.logic = logic;
 
@@ -37,6 +38,9 @@ public class PlannerGrid extends Grid<CourseRecord> {
         addColumn(CourseRecord::getPeriod)
                 .setSortable(true)
                 .setHeader(resourceBundle.getString("component_courses_period"));
+        addColumn(CourseRecord::getYear)
+                .setSortable(true)
+                .setHeader(resourceBundle.getString("component_courses_year"));
         addColumn(new ComponentRenderer<>(e -> {
             Icon status = createIcon(VaadinIcon.EXCLAMATION_CIRCLE, resourceBundle.getString("error_planner_errorhours"), "badge error");
             try {
@@ -53,7 +57,7 @@ public class PlannerGrid extends Grid<CourseRecord> {
             }
         }))
                 .setHeader(resourceBundle.getString("component_courses_hours"));
-        addColumn(new ComponentRenderer<>(e -> {
+        actionsColumn = addColumn(new ComponentRenderer<>(e -> {
             Button btnDelete = new Button();
             Icon icon = new Icon(VaadinIcon.TRASH);
             icon.setColor("red");
@@ -87,5 +91,9 @@ public class PlannerGrid extends Grid<CourseRecord> {
         icon.getElement().setAttribute("title", label);
         icon.getElement().getThemeList().add(theme);
         return icon;
+    }
+
+    public Column<CourseRecord> getActionsColumn() {
+        return actionsColumn;
     }
 }

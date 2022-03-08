@@ -1,5 +1,6 @@
 package it.unibg.studenti.data.service;
 
+import it.unibg.studenti.data.Published;
 import it.unibg.studenti.generated.tables.records.CourseRecord;
 import it.unibg.studenti.generated.tables.records.DegreeHasCourseRecord;
 import it.unibg.studenti.generated.tables.records.DegreeRecord;
@@ -111,5 +112,15 @@ public class DegreeService extends DatabaseService implements DatabaseDAO<Degree
         getDSL().delete(DEGREE_HAS_COURSE)
                 .where(DEGREE_HAS_COURSE.DEGREE_IDDEGREE.eq(id).and(DEGREE_HAS_COURSE.COURSE_IDCOURSE.eq(courseid)))
                 .execute();
+    }
+
+    public List<DegreeRecord> getDegreePublishedByYear(YearRecord yearRecord) {
+        return getDegreePublishedByYear(yearRecord.getIdyear());
+    }
+
+    public List<DegreeRecord> getDegreePublishedByYear(int id) {
+        return getDSL().selectFrom(DEGREE)
+                .where(DEGREE.YEARID.eq(id).and(DEGREE.ISPUBLISHED.eq(Published.PUBLISHED.getPublishedValue())))
+                .fetchInto(DegreeRecord.class);
     }
 }
