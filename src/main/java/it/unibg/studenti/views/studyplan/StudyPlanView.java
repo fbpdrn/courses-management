@@ -44,14 +44,14 @@ public class StudyPlanView extends VerticalLayout {
         selectYear = new Select<>();
         Select<DegreeRecord> selectDegree = new Select<>();
         Select<Double> selectAccYear = new Select<>();
-        selectDegree.setEnabled(false);
-        selectAccYear.setEnabled(false);
         selectAccYear.setItemLabelGenerator(e -> {
             if (e.intValue() < 0)
                 return (resourceBundle.getString("component_planner_all"));
             else
                 return String.valueOf(e.intValue());
         });
+        selectDegree.setEnabled(false);
+        selectAccYear.setEnabled(false);
         selectYear.setItems(logic.getService().getYearService().getAll());
 
         selectYear.addValueChangeListener(e -> {
@@ -68,6 +68,8 @@ public class StudyPlanView extends VerticalLayout {
             logic.setCurrentDegree(null);
         });
         selectDegree.addValueChangeListener(e -> {
+            grid.setItems(new ArrayList<>());
+            selectAccYear.setValue(null);
             ArrayList<Double> list = new ArrayList<>();
             if(selectAccYear.isEnabled()) {
                 selectAccYear.clear();
@@ -85,12 +87,13 @@ public class StudyPlanView extends VerticalLayout {
         });
 
         selectAccYear.addValueChangeListener(e -> {
-            logic.setCurrentDegree(getSelectedDegree());
-            grid.refresh(getSelectedDegree(),e.getValue());
+            if(e.getValue() != null) {
+                logic.setCurrentDegree(getSelectedDegree());
+                grid.refresh(getSelectedDegree(), e.getValue());
+            }
         });
         selectYear.setItemLabelGenerator(e -> e.getYearstart() + " → " +e.getYearend());
         selectDegree.setItemLabelGenerator(e-> e.getCode() + " - " + e.getName());
-        selectAccYear.setItemLabelGenerator(e -> String.valueOf(e.intValue()));
         topLayout.add(selectYear, selectDegree, selectAccYear);
         return topLayout;
     }
