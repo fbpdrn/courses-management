@@ -1,62 +1,43 @@
-# Course Management
+# Courses Management
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+Questo è un progetto di tesi triennale di Ingegneria Informatica.
 
-## Running the application
+## Avvio applicazione
 
-The project is a standard Maven project. To run it from the command line,
-type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+Si tratta di un progetto Maven standard. Per avviarlo digitare  `mvnw` (Windows), o `./mvnw` (Mac & Linux), e aprire
+la pagina http://localhost:8080 del proprio browser. È necessario avere preconfigurato una base di dati compatibile con 
+lo script presente nella cartella `database` e aver modificato correttamente i file `applications.properties` in
+`src/main/resources` e `pom.xml` per la corretta esecuzione.
 
-You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different 
-IDEs](https://vaadin.com/docs/latest/flow/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
+## Distribuzione applicazione
 
-## Deploying to Production
+Per creare una build è necessario usare il comando `mvnw clean package -Pproduction` (Windows)
+oppure `./mvnw clean package -Pproduction` (Mac & Linux).
+Questo comando creerà un file JAR contenente tutte le dipendenze e il frontend all'interno della cartella `target`.
 
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
+Una volta finita la costruzione del file, si potrà avviare l'applicazione con il seguente comando:
+`java -jar target/coursemanagement-(versione).jar`
 
-Once the JAR file is built, you can run it using
-`java -jar target/coursemanagement-1.0-SNAPSHOT.jar`
+## Struttura progetto
 
-## Project structure
-
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/components/vaadin-app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `frontend/` contains the client-side JavaScript views of your application.
-- `themes` folder in `frontend/` contains the custom CSS styles.
-
-## Useful links
-
-- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
-- Follow the tutorials at [vaadin.com/tutorials](https://vaadin.com/tutorials).
-- Watch training videos and get certified at [vaadin.com/learn/training](https://vaadin.com/learn/training).
-- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
-- Search UI components and their usage examples at [vaadin.com/components](https://vaadin.com/components).
-- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Discover Vaadin's set of CSS utility classes that enable building any UI without custom CSS in the [docs](https://vaadin.com/docs/latest/ds/foundation/utility-classes). 
-- Find a collection of solutions to common use cases in [Vaadin Cookbook](https://cookbook.vaadin.com/).
-- Find Add-ons at [vaadin.com/directory](https://vaadin.com/directory).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin/platform).
+- `MainLayout.java` in `src/main/java` contiene i metodi per la creazione della navbar e utilizza l'
+- [App Layout](https://vaadin.com/components/vaadin-app-layout) di Vaadin come base.
+- `views` in `src/main/java` contiene tutte le viste server-side scritte in Java.
+- `data` in `src/main/java` contiene tutte le classi utili per interfacciarsi con la base di dati.
+- `generated` in `src/main/java` contiene le classi generate da JOOQ.
+- `security` in `src/main/java` contiene le classi per gestire l'accesso alle varie viste.
+- `views` in `frontend/` contiene tutte le viste client-side scritte in Javascript.
+- `themes` in `frontend/` contiene gli eventuali temi CSS personalizzati.
 
 
-## Deploying using Docker
+## Distribuzione con Docker compose
 
-To build the Dockerized version of the project, run
+All'interno del progetto è già presente un file per avviare uno stack di container chiamato `docker-compose.yml`.
+Per eseguirlo digitare sul terminale:
 
 ```
-docker build . -t coursemanagement:latest
+docker compose up
 ```
 
-Once the Docker image is correctly built, you can test it locally using
-
-```
-docker run -p 8080:8080 coursemanagement:latest
-```
+Una volta che i container saranno completamente inizializzati (ci potrebbero volere diversi minuti), l'applicazione sarà
+pronta all'uso e con un set di dati precaricato. Per eseguire l'accesso usare admin@admin.

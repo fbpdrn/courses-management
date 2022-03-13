@@ -56,7 +56,8 @@ public class DepartmentsDialog extends Dialog {
         binder.forField(tfName)
                 .withValidator(name -> name.trim().length() > 0, resourceBundle.getString("error_departments_name"))
                 .withValidator(name -> !name.isBlank(), resourceBundle.getString("error_departments_name"))
-                .withValidationStatusHandler(status -> tfName.setErrorMessage(status.getMessage().orElse(resourceBundle.getString("error_common_unknown"))))
+                .withValidationStatusHandler(status -> tfName.setErrorMessage(status.getMessage()
+                        .orElse(resourceBundle.getString("error_common_unknown"))))
                 .asRequired()
                 .bind(DepartmentRecord::getName, DepartmentRecord::setName);
         binder.forField(tfDescription).bind(DepartmentRecord::getDescription, DepartmentRecord::setDescription);

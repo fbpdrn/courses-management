@@ -42,7 +42,7 @@ public class SettingsView extends HorizontalLayout {
         setSpacing(false);
         setSizeFull();
 
-        appSettings = new Tab(VaadinIcon.COG.create(),new Span(resourceBundle.getString("settings_menu_misc")));
+        appSettings = new Tab(VaadinIcon.CALENDAR_O.create(),new Span(resourceBundle.getString("settings_menu_calendar")));
         userSettings = new Tab(VaadinIcon.USER.create(),new Span(resourceBundle.getString("settings_menu_users")));
         Tabs tabs = new Tabs(
                 appSettings,userSettings
