@@ -18,6 +18,7 @@ public class PlannerGrid extends Grid<CourseRecord> {
     private final PlannerLogic logic;
     private Double lastYear = -1.0;
     private final Column<CourseRecord> actionsColumn;
+    private final Column<CourseRecord> badgeColumn;
     public PlannerGrid(PlannerLogic logic, ResourceBundleWrapper resourceBundle) {
         this.logic = logic;
 
@@ -41,7 +42,7 @@ public class PlannerGrid extends Grid<CourseRecord> {
         addColumn(CourseRecord::getYear)
                 .setSortable(true)
                 .setHeader(resourceBundle.getString("component_courses_year"));
-        addColumn(new ComponentRenderer<>(e -> {
+        badgeColumn = addColumn(new ComponentRenderer<>(e -> {
             Icon status = createIcon(VaadinIcon.EXCLAMATION_CIRCLE, resourceBundle.getString("error_planner_errorhours"), "badge error");
             try {
                 double val = logic.getService().getCourseService().getOne(e.getIdcourse()).getHours() - logic.getService().getCourseService().getHoursAssigned(e.getIdcourse());
@@ -95,5 +96,8 @@ public class PlannerGrid extends Grid<CourseRecord> {
 
     public Column<CourseRecord> getActionsColumn() {
         return actionsColumn;
+    }
+    public Column<CourseRecord> getBadgeColumn() {
+        return badgeColumn;
     }
 }

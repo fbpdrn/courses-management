@@ -48,6 +48,7 @@ public class SettingsView extends HorizontalLayout {
                 appSettings,userSettings
         );
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
+        tabs.setSelectedTab(null);
         tabs.setWidth("300px");
         tabs.addSelectedChangeListener(event ->
                 setContent(event.getSelectedTab())

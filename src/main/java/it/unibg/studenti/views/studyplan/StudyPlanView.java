@@ -34,6 +34,7 @@ public class StudyPlanView extends VerticalLayout {
         logic = new PlannerLogic(null, service, resourceBundle, null);
         grid = new PlannerGrid(logic, resourceBundle);
         grid.getActionsColumn().setVisible(false);
+        grid.getBadgeColumn().setVisible(false);
         add(createTopBar(logic, resourceBundle));
         add(grid);
     }
