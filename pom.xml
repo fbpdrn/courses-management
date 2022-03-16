@@ -287,6 +287,9 @@
                                 <goals>
                                     <goal>start</goal>
                                 </goals>
+                                <configuration>
+                                    <fork>false</fork>
+                                </configuration>
                             </execution>
                             <execution>
                                 <id>stop-spring-boot</id>
@@ -302,6 +305,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.22.2</version>
                         <executions>
                             <execution>
                                 <goals>
