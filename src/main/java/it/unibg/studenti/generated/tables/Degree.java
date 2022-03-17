@@ -58,12 +58,12 @@ public class Degree extends TableImpl<DegreeRecord> {
     /**
      * The column <code>course_management.degree.name</code>.
      */
-    public final TableField<DegreeRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(45).nullable(false), this, "");
+    public final TableField<DegreeRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>course_management.degree.code</code>.
      */
-    public final TableField<DegreeRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR(45).nullable(false), this, "");
+    public final TableField<DegreeRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>course_management.degree.accyear</code>.

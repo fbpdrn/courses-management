@@ -76,12 +76,12 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>course_management.user.name</code>.
      */
-    public final TableField<UserRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(45).defaultValue(DSL.inline("Name", SQLDataType.VARCHAR)), this, "");
+    public final TableField<UserRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).defaultValue(DSL.inline("Name", SQLDataType.VARCHAR)), this, "");
 
     /**
      * The column <code>course_management.user.surname</code>.
      */
-    public final TableField<UserRecord, String> SURNAME = createField(DSL.name("surname"), SQLDataType.VARCHAR(45).defaultValue(DSL.inline("Surname", SQLDataType.VARCHAR)), this, "");
+    public final TableField<UserRecord, String> SURNAME = createField(DSL.name("surname"), SQLDataType.VARCHAR(255).defaultValue(DSL.inline("Surname", SQLDataType.VARCHAR)), this, "");
 
     private User(Name alias, Table<UserRecord> aliased) {
         this(alias, aliased, null);

@@ -84,6 +84,7 @@ public class StaffDialog extends Dialog {
         //UI Section
 
         FormLayout layout = new FormLayout();
+        layout.setId("form-layout");
 
         layout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1),
@@ -96,10 +97,12 @@ public class StaffDialog extends Dialog {
         add(avatarGroup);
 
         errorMessage = new Label(resourceBundle.getString("error_common_genericfield"));
+        errorMessage.setId("error-label");
         errorMessage.setVisible(false);
         errorMessage.getStyle().set("color", Color.ERROR.getColorValue());
 
         TextField tfEmail = new TextField();
+        tfEmail.setId("email-field");
         tfEmail.setRequired(true);
         tfEmail.setValueChangeMode(ValueChangeMode.EAGER);
         tfEmail.addValueChangeListener(e -> {
@@ -109,15 +112,19 @@ public class StaffDialog extends Dialog {
         tfEmail.setLabel(resourceBundle.getString("component_staff_email"));
 
         TextField tfFirstname = new TextField();
+        tfFirstname.setId("fname-field");
         tfFirstname.setLabel(resourceBundle.getString("component_staff_firstname"));
 
         TextField tfMiddlename = new TextField();
+        tfMiddlename.setId("mname-field");
         tfMiddlename.setLabel(resourceBundle.getString("component_staff_middlename"));
 
         TextField tfSurname = new TextField();
+        tfSurname.setId("sname-field");
         tfSurname.setLabel(resourceBundle.getString("component_staff_surname"));
 
         Select<String> tfSex = new Select<>();
+        tfSex.setId("sex-select");
         ArrayList<String> slist = new ArrayList<>();
         for(Sex s : Sex.values()) {
             slist.add(s.getSexName());
@@ -126,6 +133,7 @@ public class StaffDialog extends Dialog {
         tfSex.setLabel(resourceBundle.getString("component_staff_sex"));
 
         Select<String> tfContract = new Select<>();
+        tfContract.setId("contract-select");
         ArrayList<String> clist = new ArrayList<>();
         for(Contract s : Contract.values()) {
             clist.add(s.getTypeName());
@@ -139,6 +147,7 @@ public class StaffDialog extends Dialog {
         tfContract.setLabel(resourceBundle.getString("component_staff_contract"));
 
         Select<Integer> tfDepartment = new Select<>();
+        tfDepartment.setId("department-select");
         ArrayList<DepartmentRecord> dep = new ArrayList<>(logic.getService().getDepartmentService().getAll());
         ArrayList<Integer> l = new ArrayList<>();
         for(DepartmentRecord d : dep)
@@ -153,21 +162,27 @@ public class StaffDialog extends Dialog {
         tfDepartment.setLabel(resourceBundle.getString("component_staff_department"));
 
         TextField tfPhone = new TextField();
+        tfPhone.setId("phone-field");
         tfPhone.setLabel(resourceBundle.getString("component_staff_phone"));
 
         TextField tfRoom = new TextField();
+        tfRoom.setId("room-field");
         tfRoom.setLabel(resourceBundle.getString("component_staff_roomnum"));
 
         TextField tfStreet = new TextField();
+        tfStreet.setId("street-field");
         tfStreet.setLabel(resourceBundle.getString("component_staff_street"));
 
         TextField tfStreetNumber = new TextField();
+        tfStreetNumber.setId("streetnum-field");
         tfStreetNumber.setLabel(resourceBundle.getString("component_staff_streetnum"));
 
         TextField tfCity = new TextField();
+        tfCity.setId("city-field");
         tfCity.setLabel(resourceBundle.getString("component_staff_city"));
 
         TextField tfZipcode = new TextField();
+        tfZipcode.setId("zipcode-field");
         tfZipcode.setLabel(resourceBundle.getString("component_staff_zipcode"));
         layout.add(tfEmail, tfFirstname, tfMiddlename, tfSurname, tfSex, tfPhone, tfRoom, tfStreet, tfStreetNumber,
                 tfCity, tfZipcode, tfContract, tfDepartment);

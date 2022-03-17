@@ -56,12 +56,12 @@ public class Year extends TableImpl<YearRecord> {
     /**
      * The column <code>course_management.year.yearstart</code>.
      */
-    public final TableField<YearRecord, String> YEARSTART = createField(DSL.name("yearstart"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<YearRecord, String> YEARSTART = createField(DSL.name("yearstart"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>course_management.year.yearend</code>.
      */
-    public final TableField<YearRecord, String> YEAREND = createField(DSL.name("yearend"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<YearRecord, String> YEAREND = createField(DSL.name("yearend"), SQLDataType.VARCHAR(255), this, "");
 
     private Year(Name alias, Table<YearRecord> aliased) {
         this(alias, aliased, null);

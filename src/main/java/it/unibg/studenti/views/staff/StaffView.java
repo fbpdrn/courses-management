@@ -17,12 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.security.RolesAllowed;
 
 @PageTitle("Staff")
-@Route(value = "Staff", layout = MainLayout.class)
+@Route(value = "staff", layout = MainLayout.class)
 @RolesAllowed("user")
 public class StaffView extends AbstractView {
     private final StaffLogic logic;
 
     public StaffView(@Autowired ServiceManager service, @Autowired ResourceBundleWrapper resourceBundle, @Autowired AuthenticatedUser currentUser) {
+        setId("staff-view");
         UserInfo userInfo = getUserInfo(service, currentUser);
         setSpacing(false);
         setSizeFull();
@@ -33,9 +34,11 @@ public class StaffView extends AbstractView {
 
         HorizontalLayout topLayout = new HorizontalLayout();
         Button btnNew = new Button(resourceBundle.getString("component_common_button_new"));
+        btnNew.setId("new-button");
         btnNew.addClickListener(e ->
                 new StaffDialog(logic,grid,null, resourceBundle).open());
         TextField searchBar = new TextField();
+        searchBar.setId("searchbar-field");
         searchBar.setPlaceholder(resourceBundle.getString("component_staff_searchbar"));
         searchBar.addValueChangeListener(e -> grid.refresh(e.getValue()));
         searchBar.setValueChangeMode(ValueChangeMode.EAGER);

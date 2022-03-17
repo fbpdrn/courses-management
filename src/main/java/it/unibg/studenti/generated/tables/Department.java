@@ -56,7 +56,7 @@ public class Department extends TableImpl<DepartmentRecord> {
     /**
      * The column <code>course_management.department.name</code>.
      */
-    public final TableField<DepartmentRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(45).nullable(false), this, "");
+    public final TableField<DepartmentRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>course_management.department.description</code>.
@@ -66,7 +66,7 @@ public class Department extends TableImpl<DepartmentRecord> {
     /**
      * The column <code>course_management.department.city</code>.
      */
-    public final TableField<DepartmentRecord, String> CITY = createField(DSL.name("city"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<DepartmentRecord, String> CITY = createField(DSL.name("city"), SQLDataType.VARCHAR(90), this, "");
 
     /**
      * The column <code>course_management.department.streetname</code>.

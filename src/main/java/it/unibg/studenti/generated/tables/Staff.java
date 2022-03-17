@@ -63,17 +63,17 @@ public class Staff extends TableImpl<StaffRecord> {
     /**
      * The column <code>course_management.staff.firstname</code>.
      */
-    public final TableField<StaffRecord, String> FIRSTNAME = createField(DSL.name("firstname"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<StaffRecord, String> FIRSTNAME = createField(DSL.name("firstname"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>course_management.staff.middlename</code>.
      */
-    public final TableField<StaffRecord, String> MIDDLENAME = createField(DSL.name("middlename"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<StaffRecord, String> MIDDLENAME = createField(DSL.name("middlename"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>course_management.staff.surname</code>.
      */
-    public final TableField<StaffRecord, String> SURNAME = createField(DSL.name("surname"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<StaffRecord, String> SURNAME = createField(DSL.name("surname"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>course_management.staff.sex</code>.
@@ -103,7 +103,7 @@ public class Staff extends TableImpl<StaffRecord> {
     /**
      * The column <code>course_management.staff.city</code>.
      */
-    public final TableField<StaffRecord, String> CITY = createField(DSL.name("city"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<StaffRecord, String> CITY = createField(DSL.name("city"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>course_management.staff.zipcode</code>.

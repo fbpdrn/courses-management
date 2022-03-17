@@ -11,6 +11,7 @@ public class StaffGrid extends Grid<StaffRecord> {
     private final StaffLogic logic;
 
     public StaffGrid(StaffLogic logic, ResourceBundleWrapper resourceBundle) {
+        setId("staff-grid");
         setSizeFull();
         this.logic = logic;
         addColumn(StaffRecord::getIdstaff)

@@ -56,17 +56,17 @@ public class Course extends TableImpl<CourseRecord> {
     /**
      * The column <code>course_management.course.code</code>.
      */
-    public final TableField<CourseRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR(45).nullable(false), this, "");
+    public final TableField<CourseRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>course_management.course.ssd</code>.
      */
-    public final TableField<CourseRecord, String> SSD = createField(DSL.name("ssd"), SQLDataType.VARCHAR(45).nullable(false), this, "");
+    public final TableField<CourseRecord, String> SSD = createField(DSL.name("ssd"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>course_management.course.name</code>.
      */
-    public final TableField<CourseRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<CourseRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>course_management.course.credits</code>.
@@ -86,7 +86,7 @@ public class Course extends TableImpl<CourseRecord> {
     /**
      * The column <code>course_management.course.param</code>.
      */
-    public final TableField<CourseRecord, String> PARAM = createField(DSL.name("param"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<CourseRecord, String> PARAM = createField(DSL.name("param"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>course_management.course.period</code>.
@@ -101,7 +101,7 @@ public class Course extends TableImpl<CourseRecord> {
     /**
      * The column <code>course_management.course.yearOff</code>.
      */
-    public final TableField<CourseRecord, String> YEAROFF = createField(DSL.name("yearOff"), SQLDataType.VARCHAR(45).nullable(false), this, "");
+    public final TableField<CourseRecord, String> YEAROFF = createField(DSL.name("yearOff"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private Course(Name alias, Table<CourseRecord> aliased) {
         this(alias, aliased, null);
