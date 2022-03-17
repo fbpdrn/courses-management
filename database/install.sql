@@ -417,4 +417,6 @@ INSERT INTO `degree_has_course` (`degree_iddegree`, `course_idcourse`) VALUES
 (2,	43),
 (2,	44),
 (2,	45);
+
+COMMIT;
 -- end attached script 'script'
