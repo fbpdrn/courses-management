@@ -10,6 +10,7 @@ public class DepartmentsGrid extends Grid<DepartmentRecord> {
     private final DepartmentsLogic logic;
     public DepartmentsGrid(DepartmentsLogic logic, ResourceBundleWrapper resourceBundle){
         setSizeFull();
+        setId("departments-grid");
         this.logic = logic;
         DepartmentsDialog dialog = new DepartmentsDialog(logic, this, false, resourceBundle);
         addColumn(DepartmentRecord::getIddepartment)

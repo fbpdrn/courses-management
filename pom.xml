@@ -275,6 +275,7 @@
 
         <profile>
             <id>it</id>
+            <properties><testingEnabled>true</testingEnabled></properties>
             <build>
                 <plugins>
                     <plugin>

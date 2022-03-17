@@ -17,12 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.security.RolesAllowed;
 
 @PageTitle("Departments")
-@Route(value = "Departments", layout = MainLayout.class)
+@Route(value = "departments", layout = MainLayout.class)
 @RolesAllowed("admin")
 public class DepartmentsView extends AbstractView {
     private final DepartmentsLogic logic;
 
     public DepartmentsView(@Autowired ServiceManager service, @Autowired ResourceBundleWrapper resourceBundle, @Autowired AuthenticatedUser currentUser) {
+        setId("departments-view");
         UserInfo userInfo = getUserInfo(service, currentUser);
         setSpacing(false);
         setSizeFull();
@@ -30,6 +31,7 @@ public class DepartmentsView extends AbstractView {
         logic = new DepartmentsLogic(this, service, resourceBundle, userInfo);
         DepartmentsGrid grid = new DepartmentsGrid(logic, resourceBundle);
         Button btnNew = new Button(resourceBundle.getString("component_common_button_new"));
+        btnNew.setId("new-button");
         btnNew.addClickListener(e -> {
                 DepartmentsDialog dialog = new DepartmentsDialog(logic, grid, true, resourceBundle);
                 dialog.openAndSetBinder(new DepartmentRecord());

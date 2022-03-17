@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "login")
 public class LoginView extends LoginOverlay {
     public LoginView(@Autowired ResourceBundleWrapper resourceBundle) {
+        setId("login-form");
         setAction("login");
 
         LoginI18n i18n = LoginI18n.createDefault();

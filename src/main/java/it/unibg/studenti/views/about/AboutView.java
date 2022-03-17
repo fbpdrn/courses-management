@@ -16,15 +16,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 @AnonymousAllowed
 public class AboutView extends VerticalLayout {
     public AboutView(@Autowired ResourceBundleWrapper resourceBundle) {
+        setId("about-view");
         setSpacing(false);
 
         Image img = new Image("images/logo.png", "Logo");
+        img.setId("logo");
         img.setWidth("200px");
         add(img);
 
-        add(new H2(resourceBundle.getString("app_name")));
-        add(new Paragraph(resourceBundle.getString("about_studentid")));
-        add(new Paragraph(resourceBundle.getString("about_email")));
+        H2 title = new H2(resourceBundle.getString("app_name"));
+        title.setId("title");
+        Paragraph p1 = new Paragraph(resourceBundle.getString("about_studentid"));
+        p1.setId("studentid");
+        Paragraph p2= new Paragraph(resourceBundle.getString("about_email"));
+        p2.setId("studentemail");
+
+        add(title);
+        add(p1);
+        add(p2);
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);

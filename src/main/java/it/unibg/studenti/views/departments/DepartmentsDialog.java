@@ -22,12 +22,15 @@ public class DepartmentsDialog extends Dialog {
                              boolean isNew, ResourceBundleWrapper resourceBundle){
         binder = new Binder<>();
         FormLayout layout = new FormLayout();
+        layout.setId("form-layout");
 
         Label errorMessage = new Label(resourceBundle.getString("error_departments_name"));
+        errorMessage.setId("error-label");
         errorMessage.setVisible(false);
         errorMessage.getStyle().set("color", Color.ERROR.getColorValue());
 
         TextField tfName = new TextField();
+        tfName.setId("name-field");
         tfName.setRequired(true);
         tfName.addValueChangeListener(e -> {
            if(!(tfName.getValue().trim().length() >0) || tfName.getValue().isBlank())
@@ -37,18 +40,23 @@ public class DepartmentsDialog extends Dialog {
         tfName.setLabel(resourceBundle.getString("component_departments_name"));
 
         TextField tfDescription = new TextField();
+        tfDescription.setId("description-field");
         tfDescription.setLabel(resourceBundle.getString("component_departments_description"));
 
         TextField tfLocation = new TextField();
+        tfLocation.setId("location-field");
         tfLocation.setLabel(resourceBundle.getString("component_departments_location"));
 
         TextField tfStreet = new TextField();
+        tfStreet.setId("street-field");
         tfStreet.setLabel(resourceBundle.getString("component_departments_street"));
 
         TextField tfStreetNum = new TextField();
+        tfStreetNum.setId("streetnum-field");
         tfStreetNum.setLabel(resourceBundle.getString("component_departments_streetnum"));
 
         TextField tfPhone = new TextField();
+        tfPhone.setId("phone-field");
         tfPhone.setLabel(resourceBundle.getString("component_departments_phone"));
 
         layout.add(tfName, tfDescription, tfLocation, tfStreet, tfStreetNum, tfPhone);
@@ -68,6 +76,7 @@ public class DepartmentsDialog extends Dialog {
 
         HorizontalLayout actions = new HorizontalLayout();
         Button btnSave = new Button(resourceBundle.getString("component_common_button_save"));
+        btnSave.setId("save-button");
         btnSave.addClickListener(e -> {
             if (binder.isValid()) {
                 if (isNew)
@@ -92,8 +101,10 @@ public class DepartmentsDialog extends Dialog {
             }
         });
         Button btnAbort = new Button(resourceBundle.getString("component_common_button_abort"));
+        btnAbort.setId("abort-button");
         btnAbort.addClickListener(e -> this.close());
         Button btnDelete = new Button(resourceBundle.getString("component_common_button_delete"));
+        btnDelete.setId("delete-button");
         btnDelete.addClickListener(e -> {
             logic.delete(binder.getBean());
             departmentsGrid.refresh();

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class HomeView extends VerticalLayout {
 
     public HomeView(@Autowired ResourceBundleWrapper resourceBundle) {
+        setId("home-view");
         add(new H2(resourceBundle.getString("component_home_welcome")));
         add(new Paragraph(resourceBundle.getString("component_home_intro")));
         add(new Paragraph(resourceBundle.getString("component_home_howto")));
