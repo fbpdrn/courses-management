@@ -1,0 +1,39 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      DB_USER: root
+      DB_PASSWORD: 'root'
+      DB_HOST: localhost
+      
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+        cache: maven
+    - name: Enable MySQL server and install database
+      run: |
+        sudo /etc/init.d/mysql start
+        mysql < database/install.sql -uroot -proot
+        mysql -e 'SHOW DATABASES;' -uroot -proot
+    - name: Setup hosts file
+      run: sudo echo "127.0.0.1 mysql" | sudo tee -a /etc/hosts
+    - name: Setup folder and license for CollaborationEngine
+      run: |
+        mkdir -p /home/runner/collaboration-engine/
+        cp ce-license.json /home/runner/collaboration-engine/
+        ls /home/runner/collaboration-engine/
+    - name: Integration Testing with Maven
+      run: mvn verify -Pit -X -Dvaadin.proKey=${{ secrets.VAADIN_KEY }}
