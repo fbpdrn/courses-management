@@ -36,4 +36,4 @@ jobs:
         cp ce-license.json /home/runner/collaboration-engine/
         ls /home/runner/collaboration-engine/
     - name: Integration Testing with Maven
-      run: mvn verify -Pit -X -Dvaadin.proKey=${{ secrets.VAADIN_KEY }}
+      run: mvn verify -Pit -Dvaadin.proKey=${{ secrets.VAADIN_KEY }}
