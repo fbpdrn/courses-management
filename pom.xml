@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/project/f63e21d6-0471-4784-955c-97f43d0c68cb -->
     <groupId>it.unibg.studenti</groupId>
-    <artifactId>coursemanagement</artifactId>
-    <name>Course Management</name>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>coursesmanagement</artifactId>
+    <name>Courses Management</name>
+    <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>

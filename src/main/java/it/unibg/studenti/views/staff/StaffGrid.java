@@ -1,6 +1,7 @@
 package it.unibg.studenti.views.staff;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import it.unibg.studenti.generated.tables.records.StaffRecord;
@@ -23,11 +24,10 @@ public class StaffGrid extends Grid<StaffRecord> {
                 .setSortable(true);
         addColumn(createLocationRenderer())
                 .setHeader("Location");
-
-        addItemClickListener(e -> {
-            StaffDialog dialog = new StaffDialog(logic, this, e.getItem(), resourceBundle);
-            dialog.open();
-        });
+        addItemClickListener(e -> new StaffDialog(logic, this, e.getItem(), resourceBundle).open());
+        GridContextMenu<StaffRecord> menu = this.addContextMenu();
+        menu.addItem(resourceBundle.getString("component_staff_viewcourses"), e -> e.getItem().ifPresent(record -> new StaffCoursesDialog(logic, record, resourceBundle).open()));
+        menu.addItem(resourceBundle.getString("component_common_button_edit"), e -> e.getItem().ifPresent(record -> new StaffDialog(logic, this, record, resourceBundle).open()));
         refresh();
     }
 

@@ -88,6 +88,7 @@ public class CourseService extends DatabaseService implements DatabaseDAO<Course
                 .join(REFERENT).on(REFERENT.COURSE_IDCOURSE.eq(COURSE.IDCOURSE))
                 .join(STAFF).on(REFERENT.STAFF_IDSTAFF.eq(STAFF.IDSTAFF))
                 .where(STAFF.IDSTAFF.eq(id))
+                .orderBy(COURSE.YEAROFF.desc())
                 .fetchInto(CourseRecord.class);
     }
 
