@@ -29,6 +29,7 @@ public class StudyPlanView extends VerticalLayout {
     private Select<YearRecord> selectYear;
 
     public StudyPlanView(@Autowired ServiceManager service, @Autowired ResourceBundleWrapper resourceBundle) {
+        setId("studyplan-view");
         setSpacing(false);
         setSizeFull();
         logic = new PlannerLogic(null, service, resourceBundle, null);
@@ -41,10 +42,13 @@ public class StudyPlanView extends VerticalLayout {
 
     private HorizontalLayout createTopBar(PlannerLogic logic, ResourceBundleWrapper resourceBundle){
         HorizontalLayout topLayout = new HorizontalLayout();
-
+        topLayout.setId("top-layout");
         selectYear = new Select<>();
+        selectYear.setId("year-select");
         Select<DegreeRecord> selectDegree = new Select<>();
+        selectDegree.setId("degree-select");
         Select<Double> selectAccYear = new Select<>();
+        selectAccYear.setId("accyear-select");
         selectAccYear.setItemLabelGenerator(e -> {
             if (e.intValue() < 0)
                 return (resourceBundle.getString("component_planner_all"));

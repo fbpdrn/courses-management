@@ -20,8 +20,8 @@ public class PlannerGrid extends Grid<CourseRecord> {
     private final Column<CourseRecord> actionsColumn;
     private final Column<CourseRecord> badgeColumn;
     public PlannerGrid(PlannerLogic logic, ResourceBundleWrapper resourceBundle) {
+        setId("planner-grid");
         this.logic = logic;
-
         addColumn(new ComponentRenderer<>(e-> new Span("[" + e.getYearoff() + "] " + e.getSsd() + "/" + e.getCode())))
                 .setHeader(resourceBundle.getString("component_courses_abbr"));
         addColumn(CourseRecord::getName)
