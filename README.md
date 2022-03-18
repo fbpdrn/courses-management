@@ -16,7 +16,7 @@ oppure `./mvnw clean package -Pproduction` (Mac & Linux).
 Questo comando creerà un file JAR contenente tutte le dipendenze e il frontend all'interno della cartella `target`.
 
 Una volta finita la costruzione del file, si potrà avviare l'applicazione con il seguente comando:
-`java -jar target/coursemanagement-(versione).jar`
+`java -jar target/coursesmanagement-(versione).jar`
 
 ## Struttura progetto
 
@@ -41,3 +41,13 @@ docker compose up
 
 Una volta che i container saranno completamente inizializzati (ci potrebbero volere diversi minuti), l'applicazione sarà
 pronta all'uso e con un set di dati precaricato. Per eseguire l'accesso usare admin@admin.
+
+## Testing
+
+Sono stati implementati pochi test e tutti di tipo E2E per testare la potenzialità del TestBench di Vaadin. Per usare
+questa funzionalità è richiesta una [licenza](https://vaadin.com/pricing).
+Per eseguire inserire nel terminale:
+
+```
+./mvnw verify -Pit -Dvaadin.proKey=xxxxxx-xxxxxx-xxxxxx-xxxxxx
+```
