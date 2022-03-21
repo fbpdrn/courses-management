@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Livello1">
+        <path d="M128,0C198.645,0 256,57.355 256,128C256,198.645 198.645,256 128,256C57.355,256 0,198.645 0,128C0,57.355 57.355,0 128,0ZM128,8.24C194.097,8.24 247.76,61.903 247.76,128C247.76,194.097 194.097,247.76 128,247.76C61.903,247.76 8.24,194.097 8.24,128C8.24,61.903 61.903,8.24 128,8.24Z" style="fill:rgb(51,174,255);"/>
+    </g>
+    <g id="Livello3">
+        <path d="M59.493,206.524C59.493,206.524 80.132,195.132 91.437,195.126C102.855,195.12 128,206.486 128,206.486C128,206.486 156.209,195.133 167.791,195.126C178.385,195.12 197.489,206.447 197.489,206.447" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+        <path d="M197.489,206.447L197.489,53.466" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+        <path d="M197.489,53.466C197.489,53.466 176.927,42.979 165.801,42.979C154.395,42.979 129.047,53.466 129.047,53.466C129.047,53.466 101.924,42.979 90.332,42.979" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+        <path d="M90.332,42.979C79.475,42.979 59.493,53.466 59.493,53.466" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+        <path d="M128,53.466C126.953,206.447 128,206.447 128,206.447" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+        <path d="M59.493,206.524L59.493,53.466" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+    </g>
+    <g id="Livello4">
+        <path d="M151.501,198.738L150.673,218.489L157.994,211.252L164.633,218.489L164.633,195.335" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+        <path d="M164.633,195.335L151.501,198.738" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+    </g>
+    <g id="Livello5">
+        <path d="M59.591,208.6L128,207.471L150.674,207.471L59.591,208.6Z" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+        <path d="M165.251,208.035L197.295,207.471" style="fill:none;stroke:rgb(51,174,255);stroke-width:4.78px;"/>
+    </g>
+</svg>
