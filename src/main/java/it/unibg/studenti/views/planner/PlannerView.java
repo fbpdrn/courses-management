@@ -3,6 +3,7 @@ package it.unibg.studenti.views.planner;
 import com.vaadin.collaborationengine.UserInfo;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
@@ -45,9 +46,7 @@ public class PlannerView extends AbstractView {
         add(grid);
 
         btnCourse = new Button(resourceBundle.getString("component_planner_button_addcourse"));
-        btnCourse.addClickListener(e -> {
-            new PlannerCourseDialog(logic, grid, resourceBundle).open();
-        });
+        btnCourse.addClickListener(e -> new PlannerCourseDialog(logic, grid, resourceBundle).open());
         btnCourse.setEnabled(false);
 
         btnCourse.getElement().getStyle()
@@ -70,12 +69,16 @@ public class PlannerView extends AbstractView {
         btnPost.addClickListener(e->{
            if(getSelectedDegree().getIspublished() == Published.PUBLISHED.getPublishedValue()) {
                getSelectedDegree().setIspublished(Published.NOTPUBLISHED.getPublishedValue());
-               if(logic.update(getSelectedDegree()))
-                   btnPost.setText(resourceBundle.getString("component_planner_remove"));
+               if(logic.update(getSelectedDegree())) {
+                   e.getSource().setText(resourceBundle.getString("component_planner_remove"));
+                   e.getSource().setIcon(new Icon(VaadinIcon.EYE_SLASH));
+               }
            } else {
                getSelectedDegree().setIspublished(Published.PUBLISHED.getPublishedValue());
-               if(logic.update(selectedDegree))
-                   btnPost.setText(resourceBundle.getString("component_planner_post"));
+               if(logic.update(selectedDegree)) {
+                   e.getSource().setText(resourceBundle.getString("component_planner_post"));
+                   e.getSource().setIcon(new Icon(VaadinIcon.EYE));
+               }
            }
         });
         btnPost.setEnabled(false);
@@ -128,10 +131,14 @@ public class PlannerView extends AbstractView {
             selectAccYear.setItems(list);
             btnEdit.setEnabled(true);
             btnPost.setEnabled(true);
-            if(getSelectedDegree().getIspublished() == Published.NOTPUBLISHED.getPublishedValue())
+            if(getSelectedDegree().getIspublished() == Published.NOTPUBLISHED.getPublishedValue()) {
                 btnPost.setText(resourceBundle.getString("component_planner_post"));
-            else
+                btnPost.setIcon(new Icon(VaadinIcon.EYE));
+            }
+            else {
                 btnPost.setText(resourceBundle.getString("component_planner_remove"));
+                btnPost.setIcon(new Icon(VaadinIcon.EYE_SLASH));
+            }
         });
 
         selectAccYear.addValueChangeListener(e -> {
